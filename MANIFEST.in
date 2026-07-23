@@ -1,0 +1,15 @@
+include README.md
+include pyproject.toml
+graft src
+prune tests
+prune references
+prune data
+prune output
+prune reports
+prune docs
+prune scripts
+prune schemas
+prune templates
+prune fixtures
+global-exclude *.py[cod]
+global-exclude __pycache__

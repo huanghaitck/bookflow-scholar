@@ -1,0 +1,7 @@
+book_id: acceptance_minimal
+title: Minimal Acceptance Fixture
+languages:
+  - en
+  - zh-Hans
+source_pdf: null
+mock_only: true

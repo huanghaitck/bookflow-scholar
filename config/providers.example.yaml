@@ -1,0 +1,21 @@
+allow_real_api: false
+active_translation_provider: mock
+active_vision_provider: mock
+providers:
+  mock:
+    provider_type: mock
+    model: mock-v1
+    capabilities: [text, vision, structure, review]
+  openai_compatible:
+    provider_type: openai_compatible
+    base_url: ${BOOKFLOW_PROVIDER_BASE_URL}
+    model: ${BOOKFLOW_PROVIDER_MODEL}
+    api_key_env: BOOKFLOW_PROVIDER_API_KEY
+    api_key_alias: primary
+    timeout_seconds: 120
+    max_retries: 2
+    rate_limit: 30
+    capabilities: [text, vision, ocr, structure, review]
+    extra:
+      max_output_tokens: 8192
+      temperature: 0

@@ -1,0 +1,12 @@
+{
+  "schema_version": "bookflow-s10-fixture-v1",
+  "path": "D:\\AI_Workflows\\bilingual_book\\fixtures\\s10\\S10_TWELVE_PAGE_ACCEPTANCE_FIXTURE.pdf",
+  "sha256": "1672174de8ebdcc82e0bbabe89b3157fae4b117f08596d625110b71cfc81c1ee",
+  "physical_pages": 12,
+  "image_only_pages": [
+    5,
+    9
+  ],
+  "minimum_glossary_terms": 15,
+  "complex_appendix_page": 10
+}

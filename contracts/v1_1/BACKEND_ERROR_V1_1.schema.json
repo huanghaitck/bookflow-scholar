@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "error_code",
+    "severity",
+    "user_message",
+    "technical_message",
+    "recoverable",
+    "retryable",
+    "stage",
+    "job_id",
+    "source_id",
+    "timestamp",
+    "details"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "bookflow-error-v1.1"
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "fatal"
+      ]
+    },
+    "recoverable": {
+      "type": "boolean"
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "details": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "schema_version": "manual_review_manifest.v1",
+  "objects_ref": "current_objects.json",
+  "objects_sha256": "<sha256>",
+  "source_pages": [],
+  "channel": "manual_web_assisted",
+  "provider_validation": false
+}

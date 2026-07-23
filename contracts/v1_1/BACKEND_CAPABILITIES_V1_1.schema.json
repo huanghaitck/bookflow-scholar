@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "contract_version",
+    "direct_commands",
+    "adapter_commands",
+    "transport_deferred_commands",
+    "unsupported_capabilities"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "bookflow-capabilities-v1.1"
+    },
+    "contract_version": {
+      "const": "1.1.0"
+    },
+    "direct_commands": {
+      "type": "array"
+    },
+    "adapter_commands": {
+      "type": "array"
+    },
+    "transport_deferred_commands": {
+      "type": "array"
+    },
+    "unsupported_capabilities": {
+      "type": "array"
+    }
+  }
+}

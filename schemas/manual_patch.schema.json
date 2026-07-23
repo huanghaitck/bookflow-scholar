@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bookflow.local/schemas/manual_patch.schema.json",
+  "title": "Bookflow manual/web-assisted patch",
+  "type": "object",
+  "required": ["schema_version", "patches"],
+  "properties": {
+    "schema_version": {"const": "manual_patch.v1"},
+    "patches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["object_id", "source_page", "source_file_sha256", "base_object_sha256", "changes"],
+        "properties": {
+          "object_id": {"type": "string", "minLength": 1},
+          "source_page": {"type": ["integer", "string", "null"]},
+          "source_file_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "base_object_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "changes": {"type": "object", "minProperties": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

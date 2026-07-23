@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version", "contract_version", "direct_commands", "adapter_commands",
+    "transport_deferred_commands", "unsupported_capabilities", "supportsWebAssist",
+    "supportsGlossaryReviewExport", "supportsGlossaryReviewImport",
+    "supportsDifficultPageExport", "supportsDifficultPageImport",
+    "supportsWebAssistDiffPreview", "supportsIncrementalRebuild", "supportsWebAssistUndo",
+    "supportsProviderConnectionTest", "supportsProviderConfigurationEdit"
+  ],
+  "properties": {
+    "schema_version": {"const": "bookflow-capabilities-v1.2"},
+    "contract_version": {"const": "1.2.0"},
+    "direct_commands": {"type": "array", "items": {"type": "string"}},
+    "adapter_commands": {"type": "array", "items": {"type": "string"}},
+    "transport_deferred_commands": {"type": "array", "items": {"type": "string"}},
+    "unsupported_capabilities": {"type": "array", "items": {"type": "string"}},
+    "supportsWebAssist": {"const": true},
+    "supportsGlossaryReviewExport": {"const": true},
+    "supportsGlossaryReviewImport": {"const": true},
+    "supportsDifficultPageExport": {"const": true},
+    "supportsDifficultPageImport": {"const": true},
+    "supportsWebAssistDiffPreview": {"const": true},
+    "supportsIncrementalRebuild": {"const": true},
+    "supportsWebAssistUndo": {"const": true},
+    "supportsProviderConnectionTest": {"type": "boolean"},
+    "supportsProviderConfigurationEdit": {"type": "boolean"}
+  }
+}

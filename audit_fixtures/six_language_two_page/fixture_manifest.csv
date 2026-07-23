@@ -1,0 +1,7 @@
+﻿language,filename,pages,page1_text_chars,page2_text_chars,sha256
+zh-Hans,fixture_zh-Hans.pdf,2,266,0,6812bb5ba454574a46ca90ac561fbf7c6feb4d20ab3d8fa953d8069ba3a1b39b
+en,fixture_en.pdf,2,532,0,69de5bfe173a48f3010754f6b276de0d048e9e1ce905ec1129e2c13762aaa278
+fr,fixture_fr.pdf,2,620,0,626e57df856f0484aaef7830e236f5450ea6d8cb0df5e10085102bce13abf79f
+de,fixture_de.pdf,2,647,0,e35e41a422f914dd40e4672da33680e79463eab6e76b597af799f5e6586f7409
+ja,fixture_ja.pdf,2,304,0,5315d3178b0671006572e791cdb51edc3d42c05a458facc633418327de5f1044
+es,fixture_es.pdf,2,601,0,f1b8f2b857f617c037f393f17ddaf7b7ff7b54870c3e62ad699740c632e72add

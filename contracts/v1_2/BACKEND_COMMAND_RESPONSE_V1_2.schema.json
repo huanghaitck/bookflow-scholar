@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "contract_version", "command_id", "command", "status", "accepted", "result", "error", "timestamp"],
+  "properties": {
+    "schema_version": {"const": "bookflow-command-response-v1.2"},
+    "contract_version": {"const": "1.2.0"},
+    "command_id": {"type": "string"},
+    "command": {"type": "string"},
+    "status": {"enum": ["accepted", "rejected"]},
+    "accepted": {"type": "boolean"},
+    "timestamp": {"type": "string"}
+  }
+}

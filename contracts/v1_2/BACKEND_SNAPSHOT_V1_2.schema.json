@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version", "contract_version", "snapshot_version", "generated_at", "backend_version",
+    "connection_status", "capabilities", "provider_status", "active_project", "projects",
+    "sources", "active_batch", "batches", "jobs", "queue", "pipeline_phase", "current_stage",
+    "aggregate_progress", "current_item", "total_items", "can_pause", "can_resume", "can_cancel",
+    "can_retry", "pause_requested", "cancel_requested", "last_checkpoint", "warnings", "errors",
+    "outputs", "usage_summary", "last_event_sequence", "web_assist_packages", "web_assist_history"
+  ],
+  "properties": {
+    "schema_version": {"const": "bookflow-snapshot-v1.2"},
+    "contract_version": {"const": "1.2.0"},
+    "snapshot_version": {"type": "integer", "minimum": 0},
+    "projects": {"type": "array"},
+    "sources": {"type": "array"},
+    "batches": {"type": "array"},
+    "jobs": {"type": "array"},
+    "aggregate_progress": {"type": "number", "minimum": 0, "maximum": 1},
+    "web_assist_packages": {"type": "array"},
+    "web_assist_history": {"type": "array"}
+  }
+}

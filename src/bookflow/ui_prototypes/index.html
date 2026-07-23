@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bookflow UI 候选方案</title>
+  <style>
+    body{font-family:"Segoe UI",sans-serif;margin:0;background:#eef0f2;color:#20242a;letter-spacing:0}
+    header{padding:28px 6vw;background:#fff;border-bottom:1px solid #d8dce0}
+    h1{margin:0 0 8px;font-size:28px}p{color:#66717b}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:24px 6vw}
+    .option{background:#fff;border:1px solid #d8dce0;border-top:5px solid #1d6659;padding:20px;border-radius:6px}
+    .option:nth-child(2){border-top-color:#2f6fa3}.option:nth-child(3){border-top-color:#a53f32}.option h2{margin:0 0 8px;font-size:20px}
+    .option a{display:inline-block;margin-top:12px;padding:9px 13px;background:#20242a;color:white;text-decoration:none;border-radius:4px}
+    .meta{font-size:12px;color:#66717b}.compare{margin:0 6vw 30px;width:88%;border-collapse:collapse;background:#fff}.compare th,.compare td{padding:12px;border:1px solid #d8dce0;text-align:left}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.compare{display:block;overflow-x:auto}}
+  </style>
+</head>
+<body>
+  <header><h1>Bookflow UI 候选方案</h1><p>三套方案使用相同的真实后端能力和安全边界，差异集中在默认工作视角。</p></header>
+  <div class="grid">
+    <section class="option"><span class="meta">OPTION A</span><h2>Scholar Desktop</h2><p>突出书目、来源身份、对象账本和 provenance，适合长期研究项目。</p><a href="option_A/index.html?option=A">查看 A</a></section>
+    <section class="option"><span class="meta">OPTION B</span><h2>Modern Console</h2><p>突出任务阶段、调用、缓存、阻塞原因和批量处理效率。</p><a href="option_B/index.html?option=B">查看 B</a></section>
+    <section class="option"><span class="meta">OPTION C</span><h2>Editorial Workstation</h2><p>突出原文、译文、图片、页面映射、复核和出版校对。</p><a href="option_C/index.html?option=C">查看 C</a></section>
+  </div>
+  <table class="compare">
+    <tr><th>方案</th><th>最适用户</th><th>默认重点</th><th>实现复杂度</th></tr>
+    <tr><td>A</td><td>研究者</td><td>来源与 provenance</td><td>中</td></tr>
+    <tr><td>B</td><td>批处理与技术用户</td><td>状态与运行控制</td><td>低</td></tr>
+    <tr><td>C</td><td>编辑与出版人员</td><td>对象复核与成品</td><td>高</td></tr>
+  </table>
+</body>
+</html>

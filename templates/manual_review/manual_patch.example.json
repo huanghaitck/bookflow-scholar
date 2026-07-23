@@ -1,0 +1,16 @@
+{
+  "schema_version": "manual_patch.v1",
+  "patches": [
+    {
+      "object_id": "example.object.001",
+      "source_page": 1,
+      "source_file_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "base_object_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "changes": {
+        "review_method": "web_assisted",
+        "review_status": "reviewed",
+        "review_note": "Example only; no book content."
+      }
+    }
+  ]
+}

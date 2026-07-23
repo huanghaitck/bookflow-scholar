@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_version",
+    "command_id",
+    "command",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.1"
+    },
+    "contract_version": {
+      "const": "1.1.0"
+    },
+    "command_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "command": {
+      "enum": [
+        "getCapabilities",
+        "getSnapshot",
+        "createProject",
+        "openProject",
+        "closeProject",
+        "importSources",
+        "selectSourceDocument",
+        "configureProvider",
+        "startPipeline",
+        "pausePipeline",
+        "resumePipeline",
+        "cancelPipeline",
+        "retryFailedStage",
+        "recoverFromCheckpoint",
+        "exportOutputs",
+        "openOutputFolder",
+        "revealLogFile",
+        "acknowledgeWarning"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  }
+}

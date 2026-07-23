@@ -1,0 +1,8 @@
+renderers:
+  office:
+    provider_id: libreoffice
+    executable:
+    discovery: auto
+    timeout_seconds: 180
+    headless: true
+    temp_profile_root:

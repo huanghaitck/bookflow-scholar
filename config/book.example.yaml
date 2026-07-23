@@ -1,0 +1,21 @@
+source_pdf: D:/Books/source.pdf
+workspace: D:/Books/bookflow-workspace
+output_directory: D:/Books/bookflow-output
+source_language: auto
+target_language: zh-Hans
+provider_config: D:/Bookflow/providers.yaml
+credentials_profile: D:/Bookflow/credentials.env
+text_provider: text-profile
+text_model: configured-text-model
+vlm_provider: vision-profile
+vlm_model: configured-vision-model
+output_role: all
+layout_mode: publication
+bilingual_layout: stacked
+terminology:
+book_profile:
+manual_review: true
+resume: true
+publication_reconstruction: true
+pdf_renderer: native_pdf
+renderer_config: D:/Bookflow/renderers.yaml

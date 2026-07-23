@@ -1,0 +1,100 @@
+# Secrets
+.env
+.env.*
+!.env.example
+config/providers.local.yaml
+
+# Conda and virtual environments
+.conda/
+.conda-envs/
+.venv/
+venv/
+
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Runtime caches, logs, and temporary page images
+cache/
+work/
+tmp/
+logs/
+data/pages/
+data/pages_manifests/
+data/mock_vision/
+data/continuity/
+data/cache/
+data/logs/
+data/tmp/
+data/vision_raw/
+data/vision_normalized/
+data/vision_requests/
+data/vision_usage/
+data/vision_cache/
+data/vision_normalized_v1_1/
+data/boundary_raw/
+data/boundary_normalized/
+data/boundary_cache/
+data/boundary_reviews/
+data/logical_blocks/
+data/logical_manifests/
+data/translation_context/
+data/review/
+data/automated_pages/
+data/automated_boundaries/
+data/automated_logical_blocks/
+data/automated_translation_context/
+data/automated_audits/
+data/bilingual_document.json
+output/diagnostic/
+data/phase2b_requests/
+data/phase2b_usage/
+data/phase2b_page_cache/
+data/translation_requests/
+data/translation_raw/
+data/translation_normalized/
+data/translation_cache/
+data/translation_usage/
+data/translation_reports/
+data/phase3a_translation_sample.json
+*.log
+*.png
+*.jpg
+*.jpeg
+
+# Generated outputs
+output/*
+
+# User inputs and original PDFs
+input/*.pdf
+
+# Local development and historical acceptance evidence
+.agents/
+archive/
+audit_fixtures/
+BACKEND_CONTRACT_BUNDLE*/
+build/
+data/
+demo test/
+dist/
+handoff/
+notes/
+references/
+release_candidate_bundle/
+review_screenshots/
+review_videos/
+tmp/
+
+# Generated desktop toolchains
+ui/node_modules/
+ui/dist/
+ui/src-tauri/target/
+ui/src-tauri/resources/bookflow-sidecar/
+*.tsbuildinfo
+
+# Historical reports stay local; selected release reports may be force-added
+reports/

@@ -1,0 +1,195 @@
+source_pdf: "input/The big game of central and western China (1913).pdf"
+sample_pdf: "input/sample_11_pages.pdf"
+output_directory: "output"
+cache_directory: "data/cache"
+
+render_dpi: 200
+render_format: "png"
+render_color_mode: "RGB"
+page_image_directory: "data/pages"
+manifest_directory: "data/pages_manifests"
+mock_vision_directory: "data/mock_vision"
+continuity_directory: "data/continuity"
+log_directory: "data/logs"
+temporary_directory: "data/tmp"
+vision_window_size: 1
+vision_overlap_pages: 0
+resume: true
+force: false
+sample_page_range: [1, 11]
+
+vision_provider: "zhipu"
+vision_base_url: "https://open.bigmodel.cn/api/paas/v4"
+vision_model: "glm-4.6v"
+vision_api_key_env: "ZAI_API_KEY"
+vision_compatible_api_key_envs: ["ZHIPU_API_KEY"]
+vision_input_mode: "base64_data_url"
+vision_max_output_tokens: 8000
+vision_temperature: 0
+vision_do_sample: false
+vision_thinking_mode: "disabled"
+vision_api_enabled: false
+vision_maximum_real_calls: 1
+vision_automatic_retry: false
+vision_response_format_json_object: false
+vision_request_timeout_seconds: 180
+vision_maximum_cash_cost_cny: 0.50
+vision_context_window_tokens: 128000
+vision_input_price_cny_per_million_tokens: 1.0
+vision_output_price_cny_per_million_tokens: 3.0
+vision_input_price_cny_per_million_tokens_upper: 2.0
+vision_output_price_cny_per_million_tokens_upper: 6.0
+vision_pricing_reference_url: "https://bigmodel.cn/pricing"
+vision_pricing_checked_date: "2026-07-15"
+vision_prompt_path: "prompts/vision_transcription_v1.md"
+vision_prompt_version: "vision_transcription_v1"
+vision_raw_directory: "data/vision_raw"
+vision_normalized_directory: "data/vision_normalized"
+vision_request_directory: "data/vision_requests"
+vision_usage_directory: "data/vision_usage"
+vision_cache_directory: "data/vision_cache"
+full_pdf_protection: true
+translation_enabled: false
+translation_disabled: true
+terminology_translation_disabled: true
+automatic_phase_advance: false
+
+# Phase 3B-S: page 12 integration and source-only export
+phase3b_source_sample_pdf: "input/sample_12_pages.pdf"
+phase3b_page12_pdf: "input/sample_page_12.pdf"
+phase3b_max_single_calls: 1
+phase3b_max_pair_calls: 1
+phase3b_max_triple_calls: 0
+phase3b_max_total_calls: 2
+phase3b_automatic_retry: false
+phase3b_maximum_cash_cost_cny: 0.50
+phase3b_data_directory: "data/phase3b_source_sample12"
+phase3b_master_path: "data/source_document_sample12_v1.json"
+phase3b_diagnostic_directory: "output/diagnostic"
+phase3b_final_directory: "output/final"
+
+# Phase 2A.1 / Phase 2B (sample only)
+vision_normalized_schema_version: "1.1"
+vision_normalized_v11_directory: "data/vision_normalized_v1_1"
+phase2b_page_prompt_path: "prompts/vision_transcription_v2.md"
+phase2b_page_prompt_version: "vision_transcription_v2"
+boundary_prompt_path: "prompts/boundary_review_v1.md"
+boundary_prompt_version: "boundary_review_v1"
+boundary_schema_version: "1.0"
+logical_schema_version: "1.0"
+translation_context_schema_version: "1.0"
+boundary_raw_directory: "data/boundary_raw"
+boundary_normalized_directory: "data/boundary_normalized"
+boundary_cache_directory: "data/boundary_cache"
+boundary_review_directory: "data/boundary_reviews"
+logical_block_directory: "data/logical_blocks"
+logical_manifest_directory: "data/logical_manifests"
+translation_context_directory: "data/translation_context"
+human_review_directory: "data/review"
+boundary_qa_reference_path: "config/sample_boundary_qa_reference.yaml"
+boundary_qa_output_path: "data/review/sample_boundary_qa.json"
+phase2b_request_directory: "data/phase2b_requests"
+phase2b_usage_directory: "data/phase2b_usage"
+phase2b_page_cache_directory: "data/phase2b_page_cache"
+phase2b_max_single_calls: 10
+phase2b_max_pair_calls: 10
+phase2b_max_triple_calls: 3
+phase2b_max_total_calls: 23
+phase2b_maximum_estimated_cash_cost_cny: 0.50
+phase2b_automatic_retry: false
+phase2b_translation_enabled: false
+
+# Phase 2B.2 automated, offline and fail-closed reconstruction
+automated_page_schema_version: "2.0"
+automated_boundary_schema_version: "2.0"
+automated_logical_schema_version: "2.0"
+automated_page_directory: "data/automated_pages"
+automated_boundary_directory: "data/automated_boundaries"
+automated_logical_directory: "data/automated_logical_blocks"
+automated_context_directory: "data/automated_translation_context"
+automated_audit_directory: "data/automated_audits"
+automated_master_path: "data/bilingual_document.json"
+automated_export_directory: "output/diagnostic"
+automated_batch_size: 10
+automated_batch_overlap: 1
+automated_text_layer_coverage_threshold: 0.80
+automated_vision_prompt_path: "prompts/vision_transcription_v3.md"
+automated_boundary_prompt_path: "prompts/boundary_observation_v2.md"
+text_boundary_adjudicator_prompt_path: "prompts/text_boundary_adjudicator_v1.md"
+
+translation_provider: "deepseek"
+translation_base_url: "https://api.deepseek.com"
+translation_model: "deepseek-v4-pro"
+translation_api_key_env: "DEEPSEEK_API_KEY"
+translation_source_language: "en"
+translation_target_language: "zh-Hans"
+translation_thinking_mode: "disabled"
+translation_response_format_json_object: true
+translation_temperature: 0
+translation_max_output_tokens: 4096
+translation_request_timeout_seconds: 180
+translation_automatic_retry: false
+translation_maximum_real_calls: 5
+translation_maximum_model_list_calls: 1
+translation_maximum_cash_cost_cny: 1.00
+translation_input_cache_hit_price_cny_per_million_tokens: 0.025
+translation_input_cache_miss_price_cny_per_million_tokens: 3.0
+translation_output_price_cny_per_million_tokens: 6.0
+translation_pricing_reference_url: "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/"
+translation_pricing_checked_date: "2026-07-15"
+translation_prompt_path: "prompts/translation_en_zh_v1.md"
+translation_prompt_version: "translation_en_zh_v1.1"
+translation_language_profile_path: "language_profiles/zh-Hans.yaml"
+translation_language_profile_version: "zh-Hans-v1"
+translation_schema_version: "1.1"
+translation_request_directory: "data/translation_requests"
+translation_raw_directory: "data/translation_raw"
+translation_normalized_directory: "data/translation_normalized"
+translation_cache_directory: "data/translation_cache"
+translation_usage_directory: "data/translation_usage"
+translation_report_directory: "data/translation_reports"
+translation_derived_document_path: "data/phase3a_translation_sample.json"
+translation_diagnostic_markdown_path: "output/diagnostic/phase3a_translation_sample.md"
+translation_diagnostic_docx_path: "output/diagnostic/phase3a_translation_sample.docx"
+translation_api_enabled: false
+
+# Phase 3C+4: complete 12-page sample translation and candidate export
+phase3c4_source_document_path: "data/source_document_sample12_v1.json"
+phase3c4_master_path: "data/bilingual_document_sample12_zh-Hans_v1.json"
+phase3c4_data_directory: "data/phase3c4_translation"
+phase3c4_candidate_directory: "output/candidate"
+phase3c4_rendered_directory: "output/rendered"
+phase3c4_libreoffice_profile_directory: "data/phase3c4_libreoffice_profile"
+phase3c4_soffice_candidates:
+  - "C:\\Program Files\\LibreOffice\\program\\soffice.exe"
+  - "C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe"
+phase3c4_prompt_path: "prompts/translation_en_zh_v2.md"
+phase3c4_prompt_version: "translation_en_zh_v2.0"
+phase3c4_schema_version: "1.0"
+phase3c4_maximum_content_calls: 24
+phase3c4_maximum_model_list_calls: 1
+phase3c4_maximum_cash_cost_cny: 2.00
+phase3c4_automatic_retry: false
+phase3c4_expected_block_count: 24
+phase3c4_pricing_checked_date: "2026-07-16"
+
+# Phase 6: dynamic full-book production orchestration
+processing_page_batch_size: 20
+translation_checkpoint_interval: 50
+fullbook_data_directory: "data/fullbook"
+fullbook_candidate_directory: "output/fullbook/candidate"
+fullbook_rendered_directory: "output/fullbook/rendered"
+fullbook_final_directory: "output/fullbook/final"
+fullbook_checkpoint_path: "data/fullbook/checkpoints/production.json"
+fullbook_source_document_path: "data/fullbook/source_document_full_v1.json"
+fullbook_bilingual_document_path: "data/fullbook/bilingual_document_full_zh-Hans_v1.json"
+
+# Phase 1B: offline structure registration and bridge candidate discovery
+structure_data_directory: "data/fullbook/structure"
+structure_max_bridge_distance: 10
+structure_blank_ink_coverage_threshold: 0.01
+structure_consecutive_failure_threshold: 3
+
+maximum_cash_cost_cny: 2.0
+default_page_range: [1, 11]
+dry_run: true

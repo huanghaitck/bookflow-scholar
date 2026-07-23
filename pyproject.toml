@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bilingual-book"
+version = "0.8.0rc2"
+description = "Configurable multilingual book translation and publication workflow"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "pymupdf",
+  "pillow",
+  "pydantic",
+  "pyyaml",
+  "python-dotenv",
+  "openai",
+  "zhipuai",
+  "typer",
+  "rich",
+  "tenacity",
+  "python-docx",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+bookflow = "bookflow.runtime_cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+bookflow = ["ui_prototypes/**/*.html", "ui_prototypes/**/*.css", "ui_prototypes/**/*.js", "ui_prototypes/**/*.md", "ui_prototypes/**/*.png"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]

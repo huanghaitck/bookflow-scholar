@@ -1,0 +1,60 @@
+body { margin: 0; background: #17121d; }
+.runtime-harness {
+  --z-mascot: 50;
+  --accent-strong: #8d63aa;
+  --surface-strong: #fff9ff;
+  --surface: #f5edf7;
+  --control: #eee1f2;
+  --line: #d7c5dc;
+  --text-muted: #88768e;
+  --danger: #af3f58;
+  --shadow: 0 12px 28px rgba(22, 12, 27, .24);
+  min-height: 100vh;
+  padding: 24px;
+  color: #f8f1fb;
+  background: radial-gradient(circle at 50% 48%, #372743, #17121d 62%);
+  font-family: Inter, "Segoe UI", sans-serif;
+}
+.runtime-harness header { max-width: 900px; margin: 0 auto 18px; }
+.runtime-harness header span { color: #d9b8ec; font-size: 11px; letter-spacing: .16em; }
+.runtime-harness h1 { margin: 7px 0; font: 600 30px Georgia, serif; }
+.runtime-harness p { color: #c8bacd; }
+.runtime-controls {
+  max-width: 900px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 auto 18px;
+}
+.runtime-controls label { display: grid; gap: 5px; color: #dacde0; font-size: 11px; }
+.runtime-controls select {
+  min-width: 142px;
+  padding: 7px 10px;
+  color: #f8f1fb;
+  background: #2a2031;
+  border: 1px solid #675471;
+  border-radius: 8px;
+}
+.runtime-controls .runtime-check { display: flex; flex-direction: row; align-items: center; }
+.runtime-stage {
+  position: relative;
+  max-width: 900px;
+  min-height: 580px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #55445f;
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, .04), rgba(0, 0, 0, .16));
+}
+.runtime-stage .mascot-overlay-root { inset: 0; }
+.runtime-stage .mascot-host { width: 280px; height: 430px; }
+.runtime-stage .mascot-host.form-full { width: 300px; height: 500px; }
+.runtime-counters {
+  max-width: 900px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 14px auto;
+  color: #cbbbd1;
+  font-size: 12px;
+}

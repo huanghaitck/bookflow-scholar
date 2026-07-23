@@ -1,0 +1,5 @@
+{
+  "schema_version": "bookflow-supported-test-languages-v1",
+  "source": "src/bookflow/multilingual_workspace.py:SUPPORTED_LANGUAGES",
+  "languages": ["zh-Hans", "en", "fr", "de", "ja", "es"]
+}

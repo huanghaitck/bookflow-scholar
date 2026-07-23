@@ -1,0 +1,43 @@
+{
+  "name": "bookflow-ui-lab",
+  "version": "0.8.0-rc.2",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.15.0",
+  "scripts": {
+    "dev": "vite",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "build": "tsc -b && vite build",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build",
+    "test:visual": "playwright test",
+    "test:s3": "playwright test --config playwright.s3.config.ts tests/s3-mascot-runtime.spec.ts",
+    "test:s3:soak": "playwright test --config playwright.s3.config.ts tests/s3-mascot-soak.spec.ts",
+    "capture:g1": "playwright test tests/g1-screenshots.spec.ts"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "@lottiefiles/dotlottie-react": "0.19.10",
+    "@lottiefiles/dotlottie-web": "0.78.0",
+    "@radix-ui/react-slider": "1.4.3",
+    "@radix-ui/react-tabs": "1.1.17",
+    "@radix-ui/react-tooltip": "1.2.12",
+    "lucide-react": "1.25.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "@playwright/test": "1.61.1",
+    "@storybook/addon-a11y": "10.5.2",
+    "@storybook/addon-docs": "10.5.2",
+    "@storybook/react-vite": "10.5.2",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.3",
+    "storybook": "10.5.2",
+    "typescript": "7.0.2",
+    "vite": "8.1.5"
+  }
+}

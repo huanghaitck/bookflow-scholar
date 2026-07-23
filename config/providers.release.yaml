@@ -1,0 +1,28 @@
+allow_real_api: true
+active_translation_provider: deepseek_translation
+active_vision_provider: glm_vision
+providers:
+  deepseek_translation:
+    provider_type: openai_compatible
+    base_url: https://api.deepseek.com
+    model: deepseek-v4-pro
+    api_key_alias: text-validation
+    max_retries: 2
+    rate_limit: 30
+    capabilities:
+      - text
+      - review
+  glm_vision:
+    provider_type: openai_compatible
+    base_url: https://open.bigmodel.cn/api/paas/v4
+    model: glm-4.6v
+    api_key_alias: vision-validation
+    max_retries: 2
+    rate_limit: 15
+    capabilities:
+      - vision
+      - ocr
+      - structure
+      - review
+    max_output_tokens: 16384
+    timeout_seconds: 600

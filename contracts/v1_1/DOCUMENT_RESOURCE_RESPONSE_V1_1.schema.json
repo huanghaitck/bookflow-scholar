@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "job_id",
+    "output_path",
+    "resources"
+  ],
+  "properties": {
+    "job_id": {
+      "type": "string"
+    },
+    "output_path": {
+      "type": "string"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

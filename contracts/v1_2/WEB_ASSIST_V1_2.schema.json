@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "package": {
+      "type": "object",
+      "required": ["package_id", "package_type", "project_id", "source_document_id", "source_hash", "status", "item_count", "export_path", "created_at", "updated_at"],
+      "properties": {
+        "package_id": {"type": "string"},
+        "package_type": {"enum": ["glossary_review", "difficult_pages"]},
+        "project_id": {"type": "string"},
+        "source_document_id": {"type": "string"},
+        "source_hash": {"type": "string"},
+        "status": {"enum": ["exported", "validated", "conflicted", "applied", "undone", "discarded"]},
+        "item_count": {"type": "integer", "minimum": 0},
+        "export_path": {"type": "string"},
+        "created_at": {"type": "string"},
+        "updated_at": {"type": "string"}
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "required": ["item_id", "code", "message", "field"],
+      "properties": {
+        "item_id": {"type": "string"}, "code": {"type": "string"},
+        "message": {"type": "string"}, "field": {"type": "string"}
+      }
+    },
+    "diff": {
+      "type": "object",
+      "required": ["item_id", "field", "before", "after"],
+      "properties": {"item_id": {"type": "string"}, "field": {"type": "string"}}
+    },
+    "validation": {
+      "type": "object",
+      "required": ["package_id", "valid", "import_sha256", "changes", "conflicts", "imported_items"],
+      "properties": {
+        "package_id": {"type": "string"}, "valid": {"type": "boolean"},
+        "import_sha256": {"type": "string"}, "changes": {"type": "array", "items": {"$ref": "#/$defs/diff"}},
+        "conflicts": {"type": "array", "items": {"$ref": "#/$defs/conflict"}},
+        "imported_items": {"type": "integer", "minimum": 0}
+      }
+    },
+    "applyResult": {
+      "type": "object",
+      "required": ["application_id", "package_id", "applied_items", "conflicts", "affected_outputs", "incremental_rebuild", "undo_available"],
+      "properties": {
+        "application_id": {"type": "string"}, "package_id": {"type": "string"},
+        "applied_items": {"type": "integer", "minimum": 0}, "conflicts": {"type": "integer", "minimum": 0},
+        "affected_outputs": {"type": "array", "items": {"type": "string"}},
+        "incremental_rebuild": {"type": "boolean"}, "undo_available": {"type": "boolean"}
+      }
+    }
+  },
+  "oneOf": [{"$ref": "#/$defs/package"}, {"$ref": "#/$defs/validation"}, {"$ref": "#/$defs/applyResult"}]
+}

@@ -1,0 +1,455 @@
+.app-shell {
+  --desktop-bg: #d9d4dc;
+  --ambient: #eee9f0;
+  --topbar: #fffafd;
+  --nav: rgba(255, 251, 254, .96);
+  --surface: #fffafd;
+  --surface-strong: #fff;
+  --control: #f5edf6;
+  --text: #342c37;
+  --text-muted: #7e7082;
+  --line: #ddcfdf;
+  --accent: #8c62b5;
+  --accent-strong: #673c8d;
+  --accent-soft: #efe1f5;
+  --accent-contrast: #fff;
+  --success: #3a8b68;
+  --danger: #b75562;
+  --shadow: 0 10px 26px rgba(72, 48, 83, .11);
+  --paper: #fffdf8;
+  --paper-text: #3e343d;
+}
+
+.theme-environment {
+  position: absolute;
+  z-index: var(--z-theme-background);
+  inset: 76px 0 24px 0;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+}
+.theme-background-layer,
+.ambient-motion-layer,
+.theme-decor-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.theme-background-layer { z-index: var(--z-theme-background); }
+.ambient-motion-layer { z-index: var(--z-ambient-motion); }
+.theme-decor-layer { z-index: var(--z-theme-decor); }
+.environment-depth,
+.ambient-glow,
+.decor-window-grid,
+.decor-branch,
+.decor-map-route,
+.decor-compass,
+.decor-paperclip,
+.decor-stamp,
+.atlas-sand-haze,
+.ambient-particle {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.theme-environment[data-environment="plum_editorial"] .theme-background-layer {
+  background:
+    linear-gradient(90deg, rgba(79, 48, 86, .12), rgba(255, 248, 253, .36) 31% 72%, rgba(99, 62, 105, .1)),
+    radial-gradient(ellipse at 50% 34%, rgba(255, 250, 254, .36), transparent 46%),
+    url("../assets/themes/plum/environment-base-v2.png") center / cover no-repeat,
+    linear-gradient(145deg, #e8d7e6 0%, #f8edf3 48%, #ddd1e6 100%);
+}
+.theme-environment[data-environment="plum_editorial"] .depth-a {
+  inset: 0 auto 0 13%;
+  width: 31%;
+  opacity: .52;
+  filter: blur(2px);
+  background:
+    linear-gradient(90deg, rgba(104, 73, 107, .16) 2px, transparent 2px),
+    linear-gradient(rgba(104, 73, 107, .12) 2px, transparent 2px),
+    radial-gradient(ellipse at 54% 70%, rgba(143, 94, 149, .15), transparent 54%);
+  background-size: 130px 100%, 100% 160px, auto;
+  border-inline: 2px solid rgba(112, 78, 116, .1);
+}
+.theme-environment[data-environment="plum_editorial"] .depth-b {
+  right: 4%;
+  bottom: -9%;
+  width: 42%;
+  height: 45%;
+  opacity: .42;
+  filter: blur(6px);
+  background: radial-gradient(ellipse, rgba(157, 106, 163, .26), transparent 67%);
+}
+.theme-environment[data-environment="plum_editorial"] .decor-window-grid {
+  top: 0;
+  bottom: 0;
+  left: 15%;
+  width: 25%;
+  opacity: .14;
+  background:
+    linear-gradient(90deg, transparent 48%, #7b517e 49% 51%, transparent 52%),
+    linear-gradient(transparent 48%, #7b517e 49% 51%, transparent 52%);
+  background-size: 120px 145px;
+}
+.decor-branch {
+  display: none;
+  width: 310px;
+  height: 145px;
+  border-top: 7px solid currentColor;
+  border-radius: 50%;
+  transform-origin: 10% 50%;
+}
+.decor-branch::before,
+.decor-branch::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 10px;
+  color: inherit;
+  background: currentColor;
+  border-radius: 70% 25% 70% 25%;
+  box-shadow:
+    38px -20px currentColor,
+    78px 6px currentColor,
+    126px -13px currentColor,
+    176px 14px currentColor,
+    225px -9px currentColor;
+}
+.decor-branch::before { top: -16px; left: 31px; }
+.decor-branch::after { top: 11px; left: 55px; transform: rotate(62deg); }
+.theme-environment[data-environment="plum_editorial"] .decor-branch {
+  display: block;
+  color: rgba(121, 73, 127, .18);
+}
+.theme-environment[data-environment="sakura_literary"] .decor-branch {
+  display: block;
+  color: rgba(169, 91, 94, .23);
+}
+.branch-a { left: 10%; bottom: 3%; transform: rotate(-13deg); }
+.branch-b { top: 2%; right: -4%; transform: rotate(166deg) scale(.82); }
+
+.theme-environment[data-environment="sakura_literary"] .theme-background-layer {
+  background:
+    linear-gradient(90deg, rgba(138, 81, 68, .09), transparent 18% 78%, rgba(176, 93, 105, .06)),
+    radial-gradient(ellipse at 21% 17%, rgba(255, 251, 244, .38), transparent 30%),
+    radial-gradient(ellipse at 82% 72%, rgba(236, 174, 180, .18), transparent 37%),
+    url("../assets/themes/sakura/environment-base-v1.png") center / cover no-repeat,
+    linear-gradient(145deg, #f6e8df, #f9eee8 47%, #ead1cf);
+}
+.theme-environment[data-environment="sakura_literary"] .depth-a {
+  inset: 0 auto 0 12%;
+  width: 30%;
+  opacity: .42;
+  background:
+    linear-gradient(90deg, rgba(116, 76, 61, .22) 2px, transparent 2px),
+    linear-gradient(rgba(116, 76, 61, .18) 2px, transparent 2px);
+  background-size: 78px 100%, 100% 92px;
+  box-shadow: inset 0 0 80px rgba(255, 246, 238, .66);
+}
+.theme-environment[data-environment="sakura_literary"] .depth-b {
+  right: 0;
+  bottom: 0;
+  width: 58%;
+  height: 31%;
+  opacity: .3;
+  background:
+    repeating-linear-gradient(8deg, transparent 0 34px, rgba(156, 99, 87, .16) 35px 36px),
+    linear-gradient(transparent, rgba(202, 133, 136, .22));
+  clip-path: polygon(0 66%, 100% 25%, 100% 100%, 0 100%);
+}
+.theme-environment[data-environment="sakura_literary"] .decor-window-grid {
+  inset: 0 auto 0 13%;
+  width: 30%;
+  opacity: .2;
+  background:
+    linear-gradient(90deg, rgba(120, 76, 63, .3) 2px, transparent 2px),
+    linear-gradient(rgba(120, 76, 63, .22) 2px, transparent 2px);
+  background-size: 76px 100%, 100% 92px;
+}
+
+.theme-environment[data-environment="atlas_expedition"] .theme-background-layer {
+  background:
+    linear-gradient(90deg, rgba(65, 57, 35, .14), rgba(242, 224, 180, .22) 28% 70%, rgba(41, 68, 61, .16)),
+    radial-gradient(ellipse at 54% 40%, rgba(248, 229, 184, .24), transparent 48%),
+    url("../assets/themes/atlas/environment-base-v1.png") center / cover no-repeat,
+    #e9d9b5;
+}
+.theme-environment[data-environment="atlas_expedition"] .depth-a {
+  inset: 0;
+  opacity: .45;
+  background:
+    linear-gradient(12deg, transparent 21%, rgba(42, 116, 105, .2) 21.3% 21.6%, transparent 22%),
+    linear-gradient(-16deg, transparent 64%, rgba(42, 116, 105, .14) 64.3% 64.6%, transparent 65%);
+}
+.theme-environment[data-environment="atlas_expedition"] .depth-b {
+  left: 2%;
+  bottom: 2%;
+  width: 43%;
+  height: 25%;
+  opacity: .24;
+  background:
+    radial-gradient(ellipse at 32% 80%, #315d52 0 2px, transparent 3px),
+    repeating-linear-gradient(8deg, transparent 0 24px, rgba(43, 91, 79, .32) 25px 27px);
+  clip-path: polygon(0 70%, 18% 43%, 31% 68%, 51% 26%, 69% 62%, 84% 39%, 100% 70%, 100% 100%, 0 100%);
+}
+.decor-map-route {
+  display: none;
+  width: 32%;
+  height: 19%;
+  border: 2px dashed rgba(27, 104, 98, .24);
+  border-inline-color: transparent;
+  border-radius: 50%;
+  transform: rotate(-8deg);
+}
+.theme-environment[data-environment="atlas_expedition"] .decor-map-route { display: block; }
+.route-a { top: 9%; left: 16%; }
+.route-b { right: 3%; bottom: 9%; transform: rotate(13deg); }
+.decor-compass {
+  display: none;
+  right: 22px;
+  bottom: 18px;
+  width: 98px;
+  height: 98px;
+  place-items: center;
+  color: rgba(77, 68, 37, .58);
+  border: 4px double rgba(88, 73, 36, .38);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 7px rgba(245, 225, 175, .25);
+}
+.theme-environment[data-environment="atlas_expedition"] .decor-compass { display: grid; }
+.decor-compass b { position: absolute; top: 7px; font: 700 10px Georgia, serif; }
+.decor-compass i {
+  width: 10px;
+  height: 66px;
+  background: linear-gradient(#137772 0 50%, #a87532 50%);
+  clip-path: polygon(50% 0, 100% 50%, 50% 44%, 0 50%);
+  transform: rotate(18deg);
+}
+.decor-paperclip {
+  display: none;
+  top: 14px;
+  right: 36px;
+  width: 19px;
+  height: 54px;
+  border: 3px solid rgba(113, 78, 32, .55);
+  border-radius: 12px;
+  transform: rotate(24deg);
+}
+.theme-environment[data-environment="atlas_expedition"] .decor-paperclip { display: block; }
+.decor-stamp {
+  display: none;
+  left: 46%;
+  bottom: 8%;
+  padding: 8px;
+  color: rgba(131, 70, 42, .22);
+  border: 3px double currentColor;
+  border-radius: 50%;
+  font: 700 9px Georgia, serif;
+  letter-spacing: .1em;
+  transform: rotate(-13deg);
+}
+.theme-environment[data-environment="atlas_expedition"] .decor-stamp { display: block; }
+
+.ambient-glow {
+  width: 45%;
+  height: 45%;
+  border-radius: 50%;
+  filter: blur(34px);
+  animation: ambient-breathe 16s ease-in-out infinite alternate;
+}
+.glow-a { top: -18%; left: 17%; background: rgba(255, 244, 230, .26); }
+.glow-b { right: -8%; bottom: -18%; background: rgba(198, 147, 201, .2); animation-delay: -7s; }
+.ambient-particle {
+  top: -7%;
+  left: calc(12% + var(--particle-index, 1) * 8%);
+  width: 7px;
+  height: 5px;
+  opacity: .34;
+  background: currentColor;
+  border-radius: 70% 20% 70% 20%;
+  transform: rotate(25deg);
+  animation: ambient-drift 19s linear infinite;
+}
+.particle-1 { --particle-index: 1; animation-delay: -2s; animation-duration: 18s; }
+.particle-2 { --particle-index: 2; animation-delay: -13s; animation-duration: 23s; }
+.particle-3 { --particle-index: 3; animation-delay: -7s; animation-duration: 21s; }
+.particle-4 { --particle-index: 4; animation-delay: -17s; animation-duration: 25s; }
+.particle-5 { --particle-index: 5; animation-delay: -5s; animation-duration: 20s; }
+.particle-6 { --particle-index: 6; animation-delay: -11s; animation-duration: 24s; }
+.particle-7 { --particle-index: 7; animation-delay: -19s; animation-duration: 22s; }
+.particle-8 { --particle-index: 8; animation-delay: -9s; animation-duration: 26s; }
+.particle-9 { --particle-index: 9; animation-delay: -15s; animation-duration: 20s; }
+.particle-10 { --particle-index: 10; animation-delay: -3s; animation-duration: 24s; }
+.theme-environment[data-environment="plum_editorial"] .ambient-particle {
+  color: #a273b6;
+  box-shadow: 0 0 7px rgba(255,255,255,.8);
+}
+.theme-environment[data-environment="sakura_literary"] .ambient-particle {
+  width: 9px;
+  height: 6px;
+  color: #db8c98;
+  animation-name: sakura-fall;
+}
+.theme-environment[data-environment="atlas_expedition"] .ambient-particle {
+  width: 3px;
+  height: 3px;
+  color: #9b7440;
+  border-radius: 50%;
+  animation-name: atlas-dust;
+}
+.atlas-sand-haze { display: none; }
+.theme-environment[data-environment="atlas_expedition"] .atlas-sand-haze {
+  display: block;
+  left: -35%;
+  width: 80%;
+  height: 22%;
+  opacity: .18;
+  filter: blur(16px);
+  background: linear-gradient(10deg, transparent, rgba(183, 137, 70, .44), transparent);
+  animation: sand-haze 26s linear infinite;
+}
+.haze-a { top: 22%; }
+.haze-b { top: 66%; animation-delay: -13s !important; }
+.theme-environment[data-motion="reduced"] .ambient-particle:nth-of-type(n+6) { display: none; }
+.theme-environment[data-motion="reduced"] .ambient-particle,
+.theme-environment[data-motion="reduced"] .atlas-sand-haze { animation-duration: 38s; opacity: .12; }
+.theme-environment[data-motion="off"] .ambient-motion-layer > * { display: none !important; animation: none !important; }
+.theme-environment[data-paused="true"] .ambient-motion-layer > * { animation-play-state: paused !important; }
+
+@keyframes ambient-breathe {
+  from { opacity: .5; transform: scale(.96); }
+  to { opacity: .9; transform: scale(1.04); }
+}
+@keyframes ambient-drift {
+  0% { transform: translate3d(0, -8vh, 0) rotate(12deg); }
+  100% { transform: translate3d(34px, 112vh, 0) rotate(150deg); }
+}
+@keyframes sakura-fall {
+  0% { transform: translate3d(-8px, -9vh, 0) rotate(0); }
+  52% { transform: translate3d(32px, 55vh, 0) rotate(110deg); }
+  100% { transform: translate3d(-20px, 112vh, 0) rotate(210deg); }
+}
+@keyframes atlas-dust {
+  0% { transform: translate3d(-24vw, 85vh, 0); opacity: 0; }
+  18% { opacity: .28; }
+  100% { transform: translate3d(105vw, 22vh, 0); opacity: 0; }
+}
+@keyframes sand-haze {
+  from { transform: translate3d(-20%, 18px, 0) rotate(-3deg); }
+  to { transform: translate3d(185%, -18px, 0) rotate(-3deg); }
+}
+
+.app-shell[data-theme="plum_editorial"] {
+  --desktop-bg: #d8d2dc;
+  --ambient:
+    radial-gradient(circle at 18% 14%, rgba(255, 230, 244, .8), transparent 28%),
+    radial-gradient(circle at 82% 36%, rgba(218, 199, 241, .58), transparent 32%),
+    linear-gradient(135deg, #eaddea 0%, #f4eaf0 48%, #ddd2e6 100%);
+  --topbar: #fffafd;
+  --nav: rgba(255, 251, 254, .86);
+  --surface: rgba(255, 251, 253, .97);
+  --control: #f3e9f4;
+  --line: #decfdf;
+  --accent: #9463c2;
+  --accent-strong: #6b3b95;
+  --accent-soft: #f0e1f7;
+  --paper: #fffdf9;
+  --paper-text: #463b44;
+}
+.app-shell[data-theme="plum_editorial"] .routed-workspace::before { content: none; }
+
+.app-shell[data-theme="sakura_literary"] {
+  --desktop-bg: #e8d8d6;
+  --ambient:
+    radial-gradient(ellipse at 15% 18%, rgba(218, 112, 126, .16) 0 3px, transparent 4px),
+    radial-gradient(ellipse at 72% 8%, rgba(223, 130, 141, .12) 0 4px, transparent 5px),
+    linear-gradient(145deg, #f7ece7, #f3dfdc 56%, #ead0d1);
+  --topbar: #fff9f5;
+  --nav: rgba(255, 250, 246, .86);
+  --surface: #fffaf6;
+  --surface-strong: #fffdf9;
+  --control: #f8e9e7;
+  --text: #3d3030;
+  --text-muted: #806b6d;
+  --line: #e5ccc8;
+  --accent: #c75d70;
+  --accent-strong: #9c3f51;
+  --accent-soft: #f6dfe1;
+  --success: #6d9b69;
+  --shadow: 0 9px 24px rgba(116, 69, 69, .10);
+  --paper: #fffaf0;
+  --paper-text: #4b3732;
+}
+.app-shell[data-theme="sakura_literary"] .surface {
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(126, 76, 74, .08), inset 0 0 0 1px rgba(255,255,255,.7);
+}
+.app-shell[data-theme="sakura_literary"] .routed-workspace::before { content: none; }
+
+.app-shell[data-theme="atlas_expedition"] {
+  --desktop-bg: #c9b78f;
+  --ambient:
+    linear-gradient(rgba(88, 83, 57, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 83, 57, .06) 1px, transparent 1px),
+    radial-gradient(circle at 80% 10%, rgba(188, 143, 60, .14), transparent 35%),
+    #eee2c5;
+  --topbar: #f6ecd6;
+  --nav: rgba(246, 237, 216, .9);
+  --surface: #f7edd7;
+  --surface-strong: #fbf2df;
+  --control: #eee1c5;
+  --text: #303a32;
+  --text-muted: #697066;
+  --line: #cbbd9d;
+  --accent: #167977;
+  --accent-strong: #0d5e5c;
+  --accent-soft: #d2e5dc;
+  --accent-contrast: #fffaf0;
+  --success: #277b58;
+  --danger: #a65343;
+  --shadow: 0 10px 24px rgba(70, 62, 39, .13);
+  --paper: #f8efda;
+  --paper-text: #3d3c2e;
+}
+.app-shell[data-theme="atlas_expedition"] {
+  background-size: 72px 72px, 72px 72px, auto, auto;
+}
+.app-shell[data-theme="atlas_expedition"] .surface {
+  border-radius: 6px;
+  box-shadow: 0 8px 18px rgba(70, 61, 36, .12);
+}
+.app-shell[data-theme="atlas_expedition"] .brand-mark { border-radius: 50% 50% 8px 8px; }
+.app-shell[data-theme="atlas_expedition"] .routed-workspace::after { content: none; }
+
+.app-shell[data-theme="plum_editorial"] .surface {
+  background: color-mix(in srgb, #fffafd 91%, transparent);
+  border-color: rgba(183, 151, 193, .46);
+  backdrop-filter: blur(8px);
+}
+.app-shell[data-theme="sakura_literary"] .surface {
+  background:
+    radial-gradient(circle at 91% 8%, rgba(215, 124, 137, .055) 0 2px, transparent 3px),
+    color-mix(in srgb, #fffaf3 94%, transparent);
+  background-size: 68px 68px, auto;
+  border-color: rgba(200, 142, 138, .52);
+  backdrop-filter: blur(5px);
+}
+.app-shell[data-theme="atlas_expedition"] .surface {
+  background:
+    radial-gradient(circle at 17% 22%, rgba(95, 78, 46, .055) 0 1px, transparent 2px),
+    linear-gradient(112deg, rgba(255,255,255,.24), transparent 31%),
+    color-mix(in srgb, #f5e8c8 95%, transparent);
+  background-size: 23px 23px, auto, auto;
+  border-color: rgba(126, 105, 58, .54);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-motion-layer > * {
+    animation: none !important;
+  }
+  .ambient-particle:nth-of-type(n+5),
+  .atlas-sand-haze {
+    display: none !important;
+  }
+}
