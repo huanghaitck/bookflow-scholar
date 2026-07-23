@@ -4,7 +4,7 @@ Desktop translation and reconstruction for scholarly PDFs, books, and monographs
 
 **Languages:** [简体中文](docs/i18n/README.zh-Hans.md) · [English](docs/i18n/README.en.md) · [Français](docs/i18n/README.fr.md) · [Deutsch](docs/i18n/README.de.md) · [日本語](docs/i18n/README.ja.md) · [Español](docs/i18n/README.es.md)
 
-[Download 0.8.0-rc.2](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.2) · [Report a problem](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [Roadmap to 1.0](docs/ROADMAP_1.0.md)
+[Download 0.8.0-rc.2](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.2) · [Verify release](docs/RELEASE_VERIFICATION_0.8.0-rc.2.md) · [Report a problem](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [Roadmap to 1.0](docs/ROADMAP_1.0.md)
 
 Bookflow Scholar restores cross-page logical units before translation, then puts original-page markers back at their real boundaries. It combines deterministic document processing with multimodal layout analysis, keeps headers, footers, footnotes, and endnotes separate from body text, and reconstructs figures, captions, tables, and reading order instead of treating every PDF as a flat text stream.
 
