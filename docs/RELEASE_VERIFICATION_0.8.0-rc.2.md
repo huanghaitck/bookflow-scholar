@@ -22,3 +22,9 @@ The artifacts are intentionally unsigned. Verify these hashes against the attach
 - Public Git index contained no `.env`, local provider config, output, data, user input, personal absolute path, or real API credential.
 
 Two secret-pattern matches remain deliberately in tests. They are inert redaction sentinels used to prove that authorization headers and API-like strings do not reach diagnostics.
+
+## Post-release cleanup
+
+The public source and Release were verified before cleanup. Rebuildable toolchains, caches, duplicated acceptance runs, videos, and historical bundles were removed. Production source, tests, self-created fixtures, frozen full-book baselines, original regression inputs, final full-book outputs, S12 evidence, reports, Release artifacts, and real user projects were preserved.
+
+The project `.env` and the two S12 Windows Credential Manager aliases were deleted. Two zero-value filesystem residuals remain non-blocking: an inaccessible empty `.pytest_cache` directory and one permission-protected legacy archive under `dist/`.
