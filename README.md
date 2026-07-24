@@ -3,7 +3,7 @@
 **用你自己的 API，把论文、书籍与专著翻译成仍然“像一本书”的成品。**
 **Bring your own API and translate scholarly PDFs, books, and monographs into editions that still read like books.**
 
-[下载 0.8.0-rc.2 / Download](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.2) · [六语言手册 / Manuals](#使用手册--manuals) · [反馈问题 / Report an issue](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 路线图 / Roadmap](docs/ROADMAP_1.0.md)
+[下载 0.8.0-rc.2 / Download](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.2) · [六语言手册 / Manuals](#使用手册--manuals) · [Apache-2.0 许可证 / License](LICENSE) · [反馈问题 / Report an issue](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 路线图 / Roadmap](docs/ROADMAP_1.0.md)
 
 <p align="center">
   <img src="docs/assets/showcase/bilingual-edition-cover.png" width="30%" alt="Bookflow Scholar bilingual edition cover">
@@ -96,8 +96,9 @@ Bookflow Scholar 公开源码、构建材料、发布校验说明与问题清单
 
 Bookflow Scholar develops in the open, including source code, build materials, release verification, and issue tracking. Researchers, translators, archivists, publishing professionals, and open-source developers are welcome to contribute reproducible issues and pull requests. Please include the document type, page count, language pair, provider, failed step, and redacted logs.
 
-本 RC 仓库尚未附最终开源许可证；复用、再发布与商业使用规则将在 1.0 前明确。当前请以仓库版权声明为准。
-The final open-source license has not yet been selected for this release candidate. Reuse, redistribution, and commercial-use terms will be made explicit before 1.0; until then, the repository copyright notice applies.
+Bookflow Scholar 采用 [Apache License 2.0](LICENSE) 正式开源。你可以在许可证条件下使用、修改、分发和商业使用本项目；分发修改版本时须保留许可证与相关版权/归属声明，并清楚标注修改。项目按“现状”提供，不附带担保。
+
+Bookflow Scholar is open source under the [Apache License 2.0](LICENSE). You may use, modify, distribute, and use the project commercially under its terms. Distributed modifications must retain the license and relevant copyright/attribution notices and clearly state changes. The project is provided “AS IS”, without warranties.
 
 ## 感谢开源生态｜Built with gratitude
 
@@ -119,11 +120,11 @@ We welcome maintainers interested in PDF structure recovery, multilingual transl
 
 ## 当前版本与 1.0｜Release status and 1.0
 
-`0.8.0-rc.2` 已完成真实桌面端安装、处理、暂停/恢复、覆盖安装、卸载与数据恢复验收。下一阶段将重点放在稳定性、可解释的版面审阅、Provider 兼容性、可维护发布流程、正式开源许可与更完整的用户文档，详见 [1.0 路线图](docs/ROADMAP_1.0.md)。
+`0.8.0-rc.2` 已完成真实桌面端安装、处理、暂停/恢复、覆盖安装、卸载与数据恢复验收。下一阶段将重点放在稳定性、可解释的版面审阅、Provider 兼容性、可维护的开源发布流程与更完整的用户文档，详见 [1.0 路线图](docs/ROADMAP_1.0.md)。
 
-This release candidate has completed real desktop install, processing, pause/resume, upgrade, uninstall, and data-recovery acceptance. The path to 1.0 focuses on stability, explainable layout review, provider compatibility, maintainable releases, a formal open-source license, and deeper documentation. See the [1.0 roadmap](docs/ROADMAP_1.0.md).
+This release candidate has completed real desktop install, processing, pause/resume, upgrade, uninstall, and data-recovery acceptance. The path to 1.0 focuses on stability, explainable layout review, provider compatibility, maintainable open-source releases, and deeper documentation. See the [1.0 roadmap](docs/ROADMAP_1.0.md).
 
 `0.8.0-rc.2` 暂未签名。Windows 可能显示 SmartScreen 警告；运行前请核验发布页中的 SHA-256。便携 ZIP 可供不希望运行安装器的用户使用。
 `0.8.0-rc.2` is unsigned. Windows may show a SmartScreen warning; verify the published SHA-256 before running it. A portable ZIP is available for users who prefer not to run an installer.
 
-Copyright © 2026 huanghaitck.
+Copyright © 2026 huanghaitck. Licensed under the [Apache License 2.0](LICENSE).
