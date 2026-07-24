@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bookflow Scholar API Key 获取与配置</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #dde7f1;
+      color: #14243f;
+      font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+    }
+    .page {
+      position: relative;
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      padding: 17mm 18mm 16mm;
+      overflow: hidden;
+      page-break-after: always;
+      background:
+        radial-gradient(circle at 100% 0, rgba(62, 150, 220, .14), transparent 33%),
+        linear-gradient(150deg, #ffffff 0%, #f4f8fb 70%, #f9f5e9 100%);
+    }
+    .page:last-child { page-break-after: auto; }
+    .page::after {
+      content: attr(data-page);
+      position: absolute;
+      right: 18mm;
+      bottom: 8mm;
+      color: #77859a;
+      font-size: 8.5pt;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 3mm;
+      color: #1d365d;
+      font-size: 11pt;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 9mm;
+      height: 9mm;
+      border-radius: 2.5mm;
+      color: white;
+      background: linear-gradient(135deg, #245bd5, #25a8b8);
+    }
+    .eyebrow {
+      margin-top: 18mm;
+      color: #245bd5;
+      font-size: 10pt;
+      font-weight: 800;
+      letter-spacing: .16em;
+    }
+    h1 {
+      margin: 4mm 0 3mm;
+      max-width: 165mm;
+      font-size: 30pt;
+      line-height: 1.2;
+      letter-spacing: -.03em;
+    }
+    .subtitle {
+      max-width: 160mm;
+      margin: 0;
+      color: #596a82;
+      font-size: 13pt;
+      line-height: 1.65;
+    }
+    h2 {
+      margin: 11mm 0 4mm;
+      font-size: 20pt;
+      line-height: 1.25;
+    }
+    h3 {
+      margin: 6mm 0 2.5mm;
+      color: #1f4c91;
+      font-size: 13pt;
+    }
+    p, li, td, th {
+      font-size: 10.2pt;
+      line-height: 1.65;
+    }
+    p { margin: 2.5mm 0; }
+    ol, ul { margin: 2mm 0 0; padding-left: 6mm; }
+    li { margin-bottom: 1.7mm; }
+    a { color: #1d59c9; text-decoration: none; }
+    code {
+      padding: .4mm 1mm;
+      border-radius: 1mm;
+      background: #eaf0f7;
+      color: #123c75;
+      font-family: Consolas, "Microsoft YaHei", monospace;
+      font-size: 9pt;
+      word-break: break-all;
+    }
+    .callout {
+      margin-top: 8mm;
+      padding: 5mm 6mm;
+      border-left: 1.6mm solid #26a4b5;
+      border-radius: 0 3mm 3mm 0;
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 3mm 9mm rgba(20,36,63,.08);
+    }
+    .callout strong { font-size: 12pt; }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2.4mm;
+      margin-top: 11mm;
+    }
+    .step {
+      min-height: 34mm;
+      padding: 4mm 3.5mm;
+      border: .35mm solid rgba(36,91,213,.18);
+      border-radius: 3mm;
+      background: rgba(255,255,255,.78);
+    }
+    .step b {
+      display: block;
+      margin-bottom: 2mm;
+      color: #245bd5;
+      font-size: 16pt;
+    }
+    .step span {
+      font-size: 9.3pt;
+      line-height: 1.5;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6mm;
+      margin-top: 4mm;
+    }
+    .panel {
+      padding: 5mm;
+      border: .35mm solid rgba(20,36,63,.12);
+      border-radius: 3mm;
+      background: rgba(255,255,255,.72);
+    }
+    .panel h3 { margin-top: 0; }
+    table {
+      width: 100%;
+      margin-top: 4mm;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 2.5mm;
+      background: rgba(255,255,255,.78);
+    }
+    th, td {
+      padding: 3mm 3.5mm;
+      border-bottom: .3mm solid rgba(20,36,63,.11);
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      color: #173d78;
+      background: #eaf2fb;
+      font-weight: 800;
+    }
+    tr:last-child td { border-bottom: 0; }
+    .warn {
+      margin-top: 5mm;
+      padding: 4mm 5mm;
+      border-radius: 2.5mm;
+      background: #fff3da;
+      color: #704a06;
+      font-size: 9.8pt;
+      line-height: 1.6;
+    }
+    .checklist {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3mm 6mm;
+      margin-top: 4mm;
+    }
+    .check {
+      position: relative;
+      padding: 3.5mm 4mm 3.5mm 10mm;
+      border-radius: 2.5mm;
+      background: rgba(255,255,255,.74);
+      font-size: 9.7pt;
+      line-height: 1.55;
+    }
+    .check::before {
+      content: "✓";
+      position: absolute;
+      left: 3.5mm;
+      top: 3.2mm;
+      color: #17865b;
+      font-weight: 900;
+    }
+    .small { color: #68778c; font-size: 8.5pt; line-height: 1.55; }
+    .footer-note {
+      position: absolute;
+      left: 18mm;
+      bottom: 8mm;
+      color: #77859a;
+      font-size: 8.5pt;
+    }
+  </style>
+</head>
+<body>
+  <section class="page" data-page="1 / 4">
+    <div class="brand"><span class="brand-mark">B</span> BOOKFLOW SCHOLAR｜书流学术</div>
+    <div class="eyebrow">5 分钟入门 · API KEY SETUP</div>
+    <h1>如何获取 API Key<br>并配置文本与视觉模型</h1>
+    <p class="subtitle">以 DeepSeek 文本模型和 GLM 视觉模型为例。适用于 Bookflow Scholar 0.8.0-rc.2。</p>
+
+    <div class="callout">
+      <strong>先说清楚：API Key 通常不需要“购买”。</strong>
+      <p>你在官方开放平台免费创建密钥；真正产生费用的是模型调用。先查看赠送额度，再按需要小额充值。价格、模型名和活动会变化，请以官方平台当天页面为准。</p>
+    </div>
+
+    <div class="flow">
+      <div class="step"><b>1</b><span>进入官方开放平台并注册</span></div>
+      <div class="step"><b>2</b><span>完成认证，查看赠送额度或充值</span></div>
+      <div class="step"><b>3</b><span>创建 API Key，并只复制一次</span></div>
+      <div class="step"><b>4</b><span>在 Bookflow 填写 Base URL、Key、Model</span></div>
+      <div class="step"><b>5</b><span>保存并测试连接，确认 T/V 已就绪</span></div>
+    </div>
+
+    <h2>推荐的入门组合</h2>
+    <div class="two-col">
+      <div class="panel">
+        <h3>文本翻译：DeepSeek</h3>
+        <p>作为入门推荐已经足够，适合正文翻译与结构化文本任务。模型名更新较快，应从官方“首次调用 API”页面复制当前名称。</p>
+      </div>
+      <div class="panel">
+        <h3>视觉版面：GLM 视觉资源包</h3>
+        <p>优先购买与视觉模型对应的资源包，用于复杂论文、扫描页、地图、图版、表格与疑难页。示例：<code>glm-4.6v</code>。</p>
+      </div>
+    </div>
+
+    <div class="warn"><b>重要：</b>只在官方域名注册、充值和创建密钥。不要购买第三方转售 Key，不要把 Key 发给维护者，也不要把它粘贴进 Issue、截图或日志。</div>
+    <div class="footer-note">核验日期：2026-07-24 · 官方页面如有调整，以平台最新界面为准</div>
+  </section>
+
+  <section class="page" data-page="2 / 4">
+    <div class="brand"><span class="brand-mark">B</span> GLM｜智谱开放平台</div>
+    <h2>GLM：注册、充值与创建 API Key</h2>
+    <p>官方平台：<a href="https://open.bigmodel.cn/">https://open.bigmodel.cn/</a></p>
+
+    <h3>步骤</h3>
+    <ol>
+      <li>打开智谱开放平台，选择“注册/登录”，按平台要求完成账号与实名认证。</li>
+      <li>先查看新用户赠送额度。需要付费时，推荐进入“特惠专区/资源包”，选择当前在售的<b>视觉推理模型资源包</b>；资源包模型必须与 Bookflow 中填写的 Model 一致。</li>
+      <li>进入“个人中心 → API Keys”，创建标准开放平台 API Key：<br>
+        <a href="https://open.bigmodel.cn/usercenter/proj-mgmt/apikeys">https://open.bigmodel.cn/usercenter/proj-mgmt/apikeys</a>
+      </li>
+      <li>立即复制并妥善保存。平台可能不会再次完整显示同一个 Key。</li>
+    </ol>
+
+    <table>
+      <tr><th>Bookflow 字段</th><th>GLM 示例</th></tr>
+      <tr><td>角色</td><td>视觉模型服务；GLM 也可用于文本角色</td></tr>
+      <tr><td>Base URL</td><td><code>https://open.bigmodel.cn/api/paas/v4/</code></td></tr>
+      <tr><td>API Key</td><td>粘贴刚创建的标准开放平台 Key</td></tr>
+      <tr><td>Model</td><td>资源包示例：<code>glm-4.6v</code>；若购买 FlashX 或其他视觉包，填写对应的官方模型名</td></tr>
+    </table>
+
+    <div class="warn"><b>买视觉资源包，不要买 Coding Plan：</b>GLM Coding Plan 可能使用专属 Key 和专属端点，不是本指南推荐的 Bookflow 视觉额度。请选择适用于标准 API 的视觉模型资源包，并使用标准开放平台 Key 与通用 Base URL。资源包通常有模型范围和有效期，付款前请逐项核对。</div>
+
+    <h3>官方参考</h3>
+    <ul>
+      <li><a href="https://docs.bigmodel.cn/cn/guide/start/quick-start">智谱快速开始</a></li>
+      <li><a href="https://docs.bigmodel.cn/cn/guide/start/model-overview">模型概览与当前模型名</a></li>
+      <li><a href="https://open.bigmodel.cn/special_area">特惠专区与视觉模型资源包</a></li>
+      <li><a href="https://docs.bigmodel.cn/cn/guide/develop/http/introduction">HTTP API、Base URL 与鉴权</a></li>
+    </ul>
+
+    <div class="callout">
+      <strong>成本建议</strong>
+      <p>DeepSeek 负责文本翻译已经足够；GLM 只承担视觉版面任务。先用两页公开测试 PDF 完成连接和小规模处理，再导入长书，避免把视觉额度消耗在不需要多模态判断的页面上。</p>
+    </div>
+  </section>
+
+  <section class="page" data-page="3 / 4">
+    <div class="brand"><span class="brand-mark">B</span> DEEPSEEK｜开放平台</div>
+    <h2>DeepSeek：注册、充值与创建 API Key</h2>
+    <p>官方平台：<a href="https://platform.deepseek.com/">https://platform.deepseek.com/</a></p>
+
+    <h3>步骤</h3>
+    <ol>
+      <li>打开 DeepSeek 开放平台，注册并登录。需要在线充值时，按平台要求完成实名认证。</li>
+      <li>在“充值”页面查看余额并按需小额充值。官方 FAQ 说明，个人在线充值可使用支付宝/微信，当前充值余额永久有效；活动赠送余额可能另有期限。</li>
+      <li>进入“API Keys”，创建一个新 Key：<br>
+        <a href="https://platform.deepseek.com/api_keys">https://platform.deepseek.com/api_keys</a>
+      </li>
+      <li>复制并安全保存。建议为不同应用创建不同 Key，便于撤销和排查用量。</li>
+    </ol>
+
+    <table>
+      <tr><th>Bookflow 字段</th><th>DeepSeek 示例</th></tr>
+      <tr><td>角色</td><td>文本模型服务</td></tr>
+      <tr><td>Base URL</td><td><code>https://api.deepseek.com</code></td></tr>
+      <tr><td>API Key</td><td>粘贴刚创建的 DeepSeek Key</td></tr>
+      <tr><td>Model</td><td>从官方“首次调用 API”页面复制当前模型名</td></tr>
+    </table>
+
+    <div class="warn"><b>模型名会更新：</b>截至本指南核验日，官方页面列出 <code>deepseek-v4-flash</code> 与 <code>deepseek-v4-pro</code>，并提示旧模型别名正在弃用。不要长期照抄旧教程中的模型名。</div>
+
+    <h3>官方参考</h3>
+    <ul>
+      <li><a href="https://api-docs.deepseek.com/zh-cn/">首次调用 API、当前模型名与 Base URL</a></li>
+      <li><a href="https://api-docs.deepseek.com/quick_start/pricing/">模型与价格</a></li>
+      <li><a href="https://api-docs.deepseek.com/zh-cn/faq">充值、余额与常见问题</a></li>
+    </ul>
+
+    <div class="callout">
+      <strong>为什么仍要配置视觉 Provider？</strong>
+      <p>DeepSeek 示例承担文本翻译。论文复杂版面、扫描图、地图、照片、表格和疑难页还需要一个能接收图像的视觉模型，例如 GLM 的视觉模型。</p>
+    </div>
+  </section>
+
+  <section class="page" data-page="4 / 4">
+    <div class="brand"><span class="brand-mark">B</span> BOOKFLOW SCHOLAR｜桌面端配置</div>
+    <h2>在 Bookflow Scholar 中配置</h2>
+
+    <ol>
+      <li>启动桌面客户端，创建或打开项目。</li>
+      <li>打开左侧“模型服务”。页面中有“文本模型服务”和“视觉模型服务”两个独立角色。</li>
+      <li>分别填写 <b>Base URL、API Key、Model</b>，点击“保存”。</li>
+      <li>点击“测试连接”。顶部应显示 <b>T · 已就绪</b>、<b>V · 已就绪</b>。</li>
+      <li>先导入两页公开 PDF 做小规模测试；连接与输出正常后再处理长书。</li>
+    </ol>
+
+    <div class="checklist">
+      <div class="check">Key 只在桌面客户端输入，默认隐藏。</div>
+      <div class="check">Key 保存到 Windows 凭据管理器，不写入项目文件。</div>
+      <div class="check">Base URL 不要粘贴聊天接口的完整路径。</div>
+      <div class="check">模型名必须与该平台当前开放的名称完全一致。</div>
+    </div>
+
+    <h3>连接失败时按顺序检查</h3>
+    <table>
+      <tr><th>现象</th><th>优先检查</th></tr>
+      <tr><td>401 / 鉴权失败</td><td>Key 是否复制完整、是否属于当前平台、是否误用套餐专属 Key</td></tr>
+      <tr><td>404 / 模型不存在</td><td>模型名是否过期，Base URL 是否正确</td></tr>
+      <tr><td>429 / 额度或频率问题</td><td>余额、并发限制、调用频率；稍后重试或充值</td></tr>
+      <tr><td>视觉处理失败</td><td>视觉角色是否配置了真正支持图片输入的模型</td></tr>
+      <tr><td>网络错误</td><td>本机网络、代理、防火墙，以及官方平台服务状态</td></tr>
+    </table>
+
+    <div class="warn"><b>安全底线：</b>不要通过邮件、Issue、聊天截图或日志发送 API Key。怀疑泄露时，立即在 Provider 平台撤销旧 Key，创建新 Key，并检查账单与用量。</div>
+
+    <h3>项目与联系</h3>
+    <p>下载、六语言手册与问题反馈：<a href="https://github.com/huanghaitck/bookflow-scholar">github.com/huanghaitck/bookflow-scholar</a></p>
+    <p>维护者招募邮箱：<a href="mailto:meiyuzhang855@gmail.com">meiyuzhang855@gmail.com</a></p>
+    <p class="small">本指南不代表 GLM 或 DeepSeek 官方背书。账户、价格、模型与充值规则由相应 Provider 决定；请在充值前阅读其最新服务条款与隐私政策。</p>
+  </section>
+</body>
+</html>

@@ -47,6 +47,8 @@ The `【245】` marker sits at the original physical boundary, while the surroun
 
 ## 自有 API 与隐私｜Your API, your choice
 
+[中文 PDF：如何获取并配置 API Key（GLM 与 DeepSeek 示例）](docs/guides/Bookflow-Scholar-API-Key-Setup-zh-Hans.pdf)
+
 - 支持简体中文、英语、法语、德语、日语和西班牙语；已覆盖六种语言两两双向的 30 个有向组合。
 - 在桌面端配置文本与视觉 Provider；密钥通过 Windows Credential Manager 保存。
 - 可按材料选择只用文本模型，或在复杂版面、地图、图版与疑难页上启用多模态模型。
@@ -108,6 +110,12 @@ The final open-source license has not yet been selected for this release candida
 - 以及发布包 `THIRD_PARTY_LICENSES.md` 中列出的全部依赖与维护者。
 
 This project stands on the work of the open-source community. We are grateful to the maintainers and contributors of the projects above, and to every dependency documented in the release package’s `THIRD_PARTY_LICENSES.md`.
+
+## 招募维护者｜Maintainers wanted
+
+我们希望邀请更多维护者共同改进 PDF 结构恢复、多语言翻译、桌面体验、Windows 封装、文档与 Provider 兼容性。无论你擅长开发、测试、翻译、出版、档案或学术研究，都欢迎通过 [GitHub Issue](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) 联系，或发送邮件至 [meiyuzhang855@gmail.com](mailto:meiyuzhang855@gmail.com)。
+
+We welcome maintainers interested in PDF structure recovery, multilingual translation, desktop UX, Windows packaging, documentation, and provider compatibility. Developers, testers, translators, publishers, archivists, and researchers can reach us through [GitHub Issues](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) or email [meiyuzhang855@gmail.com](mailto:meiyuzhang855@gmail.com).
 
 ## 当前版本与 1.0｜Release status and 1.0
 
