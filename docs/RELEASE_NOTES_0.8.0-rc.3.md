@@ -13,7 +13,7 @@ Windows dependency hotfix for the installer and portable release.
 
 - **Required:** Microsoft Edge WebView2 Runtime. If missing, setup or the portable launcher starts the included Microsoft bootstrapper; an internet connection is required for that first installation.
 - **Bundled:** the persistent Python sidecar and the native PDF renderer. Users do not need Python, Conda, Node.js, Rust, or a source checkout.
-- **Optional and not bundled:** LibreOffice. It is used only for optional Office/DOCX compatibility rendering. Source, target-language, and bilingual PDFs do not require it.
+- **Optional and not bundled:** LibreOffice. It is used only for optional Office/DOCX compatibility rendering. Source, target-language, and bilingual PDFs do not require it. Bookflow does not mirror or redistribute LibreOffice; obtain it from the [official download page](https://www.libreoffice.org/download/) only when needed.
 
 ## Downloads
 

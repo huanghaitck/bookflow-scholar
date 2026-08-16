@@ -15,7 +15,7 @@
 
 ## LibreOffice
 
-LibreOffice is optional and is not included in either distribution. The three standard PDF editions use Bookflow's bundled native PDF renderer. Install [LibreOffice](https://www.libreoffice.org/download/) only if you want the optional Office/DOCX compatibility rendering path. The overview displays whether a usable local LibreOffice installation was detected.
+LibreOffice is optional and is not included in either distribution. The three standard PDF editions use Bookflow's bundled native PDF renderer. Bookflow does not mirror or redistribute LibreOffice. Install it only if you want the optional Office/DOCX compatibility rendering path, and obtain it from the [official LibreOffice download page](https://www.libreoffice.org/download/). Reopen Bookflow after installation; the overview displays whether a usable local LibreOffice installation was detected.
 
 ## User data and security
 

@@ -30,6 +30,6 @@ Mejoras principales:
 
 ## Instalación y seguridad
 
-Esta versión candidata no está firmada y Windows puede mostrar SmartScreen. Verifique el SHA-256 publicado en la Release o use el ZIP portable. [Descargue LibreOffice desde su sitio oficial](https://www.libreoffice.org/download/); es opcional, pero recomendado.
+Esta versión candidata no está firmada y Windows puede mostrar SmartScreen. Verifique el SHA-256 publicado en la Release o use el ZIP portable. LibreOffice no es necesario para las tres ediciones PDF estándar y Bookflow no lo redistribuye. Instálelo solo para el renderizado Office opcional desde la [página oficial de descargas de LibreOffice](https://www.libreoffice.org/download/) y vuelva a abrir Bookflow para que se detecte automáticamente.
 
 No publique documentos confidenciales, claves API, cabeceras de autorización, rutas privadas ni datos personales. Utilice el [formulario gratuito de GitHub](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml).

@@ -81,8 +81,8 @@ The `【245】` marker sits at the original physical boundary, while the surroun
 [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) 是桌面界面的必需组件；安装包与便携包会在缺少时启动随包附带的微软 bootstrapper。首次补装需要联网。
 [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) is required for the desktop UI. Both distributions include Microsoft's bootstrapper and launch it when the runtime is missing; the initial installation requires internet access.
 
-[LibreOffice](https://www.libreoffice.org/download/) 只用于可选的 Office/DOCX 兼容渲染。原版、目标语言版和双语版 PDF 使用随包提供的原生渲染器，不依赖 LibreOffice；客户端会显示本机 LibreOffice 的检测状态。
-[LibreOffice](https://www.libreoffice.org/download/) is used only for optional Office/DOCX compatibility rendering. The source, target-language, and bilingual PDFs use the bundled native renderer and do not require LibreOffice; the app reports the detected LibreOffice capability.
+[LibreOffice](https://www.libreoffice.org/download/) 只用于可选的 Office/DOCX 兼容渲染。原版、目标语言版和双语版 PDF 使用随包提供的原生渲染器，不依赖 LibreOffice。Bookflow 不捆绑或镜像 LibreOffice；需要该可选能力时，请从 LibreOffice 官方下载页安装，重新打开 Bookflow 后客户端会自动检测。
+[LibreOffice](https://www.libreoffice.org/download/) is used only for optional Office/DOCX compatibility rendering. The source, target-language, and bilingual PDFs use the bundled native renderer and do not require LibreOffice. Bookflow neither bundles nor mirrors LibreOffice; install it from the official LibreOffice download page only when you need this optional path, then reopen Bookflow for automatic detection.
 
 ## 使用手册｜Manuals
 

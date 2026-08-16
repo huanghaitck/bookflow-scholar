@@ -30,6 +30,6 @@ Bookflow Scholar 是面向论文、书籍和专著的 Windows 桌面翻译与版
 
 ## 安装与安全
 
-本候选版未签名，Windows 可能显示 SmartScreen 提示。运行前请核对 Release 页面公布的 SHA-256；不希望运行安装器时请使用 portable ZIP。[LibreOffice 官方下载](https://www.libreoffice.org/download/)是可选依赖，但建议安装，以使用已验证的 Office 文档渲染能力。
+本候选版未签名，Windows 可能显示 SmartScreen 提示。运行前请核对 Release 页面公布的 SHA-256；不希望运行安装器时请使用 portable ZIP。三种标准 PDF 不需要 LibreOffice，Bookflow 也不捆绑或镜像它。只有需要可选 Office 兼容渲染时，才从 [LibreOffice 官方下载页](https://www.libreoffice.org/download/)安装；安装后重新打开 Bookflow 即可自动检测。
 
 反馈时不要上传受版权或保密保护的原文，也不要粘贴 API Key、Authorization Header、完整日志中的私人路径或个人信息。请使用免费的 [GitHub 问题表单](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml)。

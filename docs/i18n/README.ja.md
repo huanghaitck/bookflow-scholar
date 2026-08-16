@@ -30,6 +30,6 @@ Bookflow Scholar は、論文・書籍・専門書を翻訳し、レイアウト
 
 ## インストールと安全
 
-この候補版は未署名のため、Windows SmartScreen が表示される場合があります。Release ページの SHA-256 を確認するか、portable ZIP を使用してください。[LibreOffice は公式サイトからダウンロード](https://www.libreoffice.org/download/)でき、任意ですが推奨です。
+この候補版は未署名のため、Windows SmartScreen が表示される場合があります。Release ページの SHA-256 を確認するか、portable ZIP を使用してください。3 種類の標準 PDF に LibreOffice は不要で、Bookflow から再配布もしません。任意の Office 互換レンダリングが必要な場合のみ、[LibreOffice 公式ダウンロードページ](https://www.libreoffice.org/download/)からインストールし、Bookflow を再起動すると自動検出されます。
 
 公開フィードバックに機密文書、API Key、Authorization Header、個人パス、個人情報を含めないでください。無料の [GitHub 問題フォーム](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) を利用してください。

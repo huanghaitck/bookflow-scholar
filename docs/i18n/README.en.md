@@ -30,6 +30,6 @@ Key improvements:
 
 ## Installation and safety
 
-This release candidate is unsigned, so Windows may display SmartScreen. Verify the SHA-256 published on the Release page before running it, or use the portable ZIP. [Download LibreOffice from its official site](https://www.libreoffice.org/download/); it is optional but recommended for the validated office-document rendering path.
+This release candidate is unsigned, so Windows may display SmartScreen. Verify the SHA-256 published on the Release page before running it, or use the portable ZIP. LibreOffice is not required for the three standard PDF editions and Bookflow does not redistribute it. Install it only for the optional Office compatibility path, using the [official LibreOffice download page](https://www.libreoffice.org/download/), then reopen Bookflow for automatic detection.
 
 Do not attach confidential or copyrighted source documents to public feedback. Never paste API keys, authorization headers, private paths, or personal information. Use the free [GitHub problem form](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml).
