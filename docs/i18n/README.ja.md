@@ -1,6 +1,6 @@
 # Bookflow Scholar ユーザーガイド（日本語）
 
-[ダウンロード](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.2) · [問題を報告](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 ロードマップ](../ROADMAP_1.0.md) · [ホーム](../../README.md)
+[ダウンロード](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.3) · [問題を報告](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 ロードマップ](../ROADMAP_1.0.md) · [ホーム](../../README.md)
 
 ## このツールについて
 
@@ -19,7 +19,7 @@ Bookflow Scholar は、論文・書籍・専門書を翻訳し、レイアウト
 
 ## 初めての使い方
 
-1. `Bookflow-Scholar-0.8.0-rc.2-setup.exe` をインストールします。インストールしない場合は portable ZIP を展開し、`Bookflow Scholar.exe` を実行します。
+1. `Bookflow-Scholar-0.8.0-rc.3-setup.exe` をインストールします。インストールしない場合は portable ZIP を展開し、`Bookflow Scholar.exe` を実行します。
 2. **Create project** を選びます。PDF の作業領域とコンテキストを確定するため、先にプロジェクトが必要です。
 3. プロジェクトを開き、テキスト／ビジョン Provider、モデル名、API Key を設定して保存します。Key は Windows 資格情報マネージャーに保存されます。
 4. **Import PDF** を選び、原文言語と対象言語を指定します。複数 Source がある場合は、使用中の Source を明示的に選択します。

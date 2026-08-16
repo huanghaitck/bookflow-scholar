@@ -3,7 +3,7 @@
 **用你自己的 API，把论文、书籍与专著翻译成仍然“像一本书”的成品。**
 **Bring your own API and translate scholarly PDFs, books, and monographs into editions that still read like books.**
 
-[下载 0.8.0-rc.2 / Download](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.2) · [六语言手册 / Manuals](#使用手册--manuals) · [Apache-2.0 许可证 / License](LICENSE) · [反馈问题 / Report an issue](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 路线图 / Roadmap](docs/ROADMAP_1.0.md)
+[下载 0.8.0-rc.3 / Download](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.3) · [六语言手册 / Manuals](#使用手册--manuals) · [Apache-2.0 许可证 / License](LICENSE) · [反馈问题 / Report an issue](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 路线图 / Roadmap](docs/ROADMAP_1.0.md)
 
 <p align="center">
   <img src="docs/assets/showcase/bilingual-edition-cover.png" width="30%" alt="Bookflow Scholar bilingual edition cover">
@@ -65,7 +65,7 @@ The `【245】` marker sits at the original physical boundary, while the surroun
 
 ## 快速开始｜Quick start
 
-1. 安装 `Bookflow-Scholar-0.8.0-rc.2-setup.exe`，或解压便携 ZIP。
+1. 安装 `Bookflow-Scholar-0.8.0-rc.3-setup.exe`，或解压便携 ZIP。
    Install the setup package, or extract the portable ZIP.
 2. 打开客户端，先选择“创建项目”。
    Open the app and choose **Create project**.
@@ -78,8 +78,11 @@ The `【245】` marker sits at the original physical boundary, while the surroun
 6. 在输出目录中打开原版、目标语言版与双语版。
    Open the source, target-language, and bilingual editions from the output folder.
 
-[LibreOffice](https://www.libreoffice.org/download/) 是经过验证的 Office 文档渲染路径，属于可选但推荐的外部依赖。
-[LibreOffice](https://www.libreoffice.org/download/) is optional but recommended for the validated office-document rendering path.
+[Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) 是桌面界面的必需组件；安装包与便携包会在缺少时启动随包附带的微软 bootstrapper。首次补装需要联网。
+[Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) is required for the desktop UI. Both distributions include Microsoft's bootstrapper and launch it when the runtime is missing; the initial installation requires internet access.
+
+[LibreOffice](https://www.libreoffice.org/download/) 只用于可选的 Office/DOCX 兼容渲染。原版、目标语言版和双语版 PDF 使用随包提供的原生渲染器，不依赖 LibreOffice；客户端会显示本机 LibreOffice 的检测状态。
+[LibreOffice](https://www.libreoffice.org/download/) is used only for optional Office/DOCX compatibility rendering. The source, target-language, and bilingual PDFs use the bundled native renderer and do not require LibreOffice; the app reports the detected LibreOffice capability.
 
 ## 使用手册｜Manuals
 
@@ -120,11 +123,11 @@ We welcome maintainers interested in PDF structure recovery, multilingual transl
 
 ## 当前版本与 1.0｜Release status and 1.0
 
-`0.8.0-rc.2` 已完成真实桌面端安装、处理、暂停/恢复、覆盖安装、卸载与数据恢复验收。下一阶段将重点放在稳定性、可解释的版面审阅、Provider 兼容性、可维护的开源发布流程与更完整的用户文档，详见 [1.0 路线图](docs/ROADMAP_1.0.md)。
+`0.8.0-rc.3` 修复了无 WebView2 电脑上的安装版与便携版启动路径，并明确区分内置原生 PDF 渲染和可选 LibreOffice 能力。下一阶段将重点放在稳定性、可解释的版面审阅、Provider 兼容性、可维护的开源发布流程与更完整的用户文档，详见 [1.0 路线图](docs/ROADMAP_1.0.md)。
 
 This release candidate has completed real desktop install, processing, pause/resume, upgrade, uninstall, and data-recovery acceptance. The path to 1.0 focuses on stability, explainable layout review, provider compatibility, maintainable open-source releases, and deeper documentation. See the [1.0 roadmap](docs/ROADMAP_1.0.md).
 
-`0.8.0-rc.2` 暂未签名。Windows 可能显示 SmartScreen 警告；运行前请核验发布页中的 SHA-256。便携 ZIP 可供不希望运行安装器的用户使用。
-`0.8.0-rc.2` is unsigned. Windows may show a SmartScreen warning; verify the published SHA-256 before running it. A portable ZIP is available for users who prefer not to run an installer.
+`0.8.0-rc.3` 暂未签名。Windows 可能显示 SmartScreen 警告；运行前请核验发布页中的 SHA-256。便携 ZIP 可供不希望运行安装器的用户使用。
+`0.8.0-rc.3` is unsigned. Windows may show a SmartScreen warning; verify the published SHA-256 before running it. A portable ZIP is available for users who prefer not to run an installer.
 
 Copyright © 2026 huanghaitck. Licensed under the [Apache License 2.0](LICENSE).

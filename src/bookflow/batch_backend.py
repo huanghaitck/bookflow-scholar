@@ -42,6 +42,7 @@ from .multilingual_workspace import (
 from .providers.mock import MockTranslationProvider
 from .provider_registry import ProviderRegistry, parse_model_json
 from .production_pipeline import PipelineControlRequested, ProductionPipeline
+from .renderer_backend import detect_renderer, load_renderer_config
 from .web_assist import WebAssistExportRequest, WebAssistImportRequest, WebAssistService
 
 
@@ -149,6 +150,7 @@ class BatchBackend:
         self.worker_registry = WorkerRegistry()
         self._shutdown_requested = threading.Event()
         self._lock = threading.RLock()
+        self._renderer_status_cache: dict[str, Any] | None = None
         self._migrate()
         self._migrate_legacy_scoped_paths()
         self.web_assist = WebAssistService(self.root)
@@ -1007,6 +1009,7 @@ class BatchBackend:
             "schema_version": "bookflow-snapshot-v1.2", "contract_version": CONTRACT_VERSION,
             "snapshot_version": last_sequence, "generated_at": _now(), "backend_version": CONTRACT_VERSION,
             "connection_status": "connected", "capabilities": self.capabilities(), "provider_status": self._provider_status(jobs),
+            "renderer_status": self._renderer_status(),
             "active_context": {**context, "active_project_id": scope_project_id},
             "active_project": active_project, "projects": projects, "sources": sources,
             "active_batch": active_batch, "batches": batches, "jobs": jobs,
@@ -1048,6 +1051,39 @@ class BatchBackend:
             "recent_events": self.events(after_sequence=max(0, last_sequence - 200), project_id=scope_project_id),
             "provider_configuration": self._provider_configuration(),
         }
+
+    def _renderer_status(self) -> dict[str, Any]:
+        """Return a cached, path-free summary of bundled and optional renderers."""
+        with self._lock:
+            if self._renderer_status_cache is None:
+                try:
+                    office = detect_renderer(load_renderer_config())
+                    office_status = str(office.get("status") or "renderer_unavailable")
+                    self._renderer_status_cache = {
+                        "docx": {"status": "available", "external_dependency": False},
+                        "native_pdf": {"status": "available", "external_dependency": False},
+                        "office": {
+                            "status": office_status,
+                            "provider_id": str(office.get("provider_id") or "libreoffice"),
+                            "version": office.get("version"),
+                            "optional": True,
+                            "external_dependency": True,
+                        },
+                    }
+                except (OSError, RuntimeError, ValueError) as exc:
+                    self._renderer_status_cache = {
+                        "docx": {"status": "available", "external_dependency": False},
+                        "native_pdf": {"status": "available", "external_dependency": False},
+                        "office": {
+                            "status": "renderer_error",
+                            "provider_id": "libreoffice",
+                            "version": None,
+                            "optional": True,
+                            "external_dependency": True,
+                            "error": type(exc).__name__,
+                        },
+                    }
+            return dict(self._renderer_status_cache)
 
     @staticmethod
     def _usage_summary(jobs: list[dict[str, Any]]) -> dict[str, Any]:

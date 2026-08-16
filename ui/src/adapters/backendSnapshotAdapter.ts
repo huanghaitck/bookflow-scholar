@@ -4,6 +4,7 @@ import type {
   BookflowSnapshot,
   ConnectionState,
   ProviderSummary,
+  RendererHealth,
   WorkflowState,
 } from '../domain/bookflow-contract';
 import { MOCK_LANGUAGE_CAPABILITIES } from '../domain/language-capabilities';
@@ -71,6 +72,14 @@ function mappedOutputs(raw: unknown): AvailableOutput[] {
   });
 }
 
+function rendererHealth(value: unknown): RendererHealth {
+  const status = stringValue(objectValue(value)?.status);
+  if (status === 'available') return 'ready';
+  if (status === 'detected_unverified') return 'unknown';
+  if (status === 'renderer_error') return 'error';
+  return 'unavailable';
+}
+
 function lifecycleState(raw: RawBackendSnapshot): WorkflowState {
   const warnings = arrayValue(raw.warnings);
   const errors = arrayValue(raw.errors);
@@ -99,6 +108,7 @@ export function mapBackendSnapshot(raw: RawBackendSnapshot): BookflowSnapshot {
   const directCommands = arrayValue(capabilities?.direct_commands).filter((item): item is string => typeof item === 'string');
   const adapterCommands = arrayValue(capabilities?.adapter_commands).filter((item): item is string => typeof item === 'string');
   const transportCommands = arrayValue(capabilities?.transport_deferred_commands).filter((item): item is string => typeof item === 'string');
+  const rendererStatus = objectValue((raw as unknown as Record<string, unknown>).renderer_status);
   const queue = objectValue(raw.queue);
   const presentationState = lifecycleState(raw);
   const activeContext = objectValue(raw.active_context) ?? {};
@@ -128,9 +138,11 @@ export function mapBackendSnapshot(raw: RawBackendSnapshot): BookflowSnapshot {
       vlm: providerSummary(arrayValue(raw.provider_configuration), arrayValue(raw.provider_status), 'vlm'),
     },
     rendererStatus: {
-      docx: 'unavailable',
-      pdf: directCommands.includes('exportOutputs') ? 'ready' : 'unavailable',
-      office: 'unavailable',
+      docx: rendererStatus ? rendererHealth(rendererStatus.docx) : 'ready',
+      pdf: rendererStatus
+        ? rendererHealth(rendererStatus.native_pdf)
+        : directCommands.includes('exportOutputs') ? 'ready' : 'unavailable',
+      office: rendererStatus ? rendererHealth(rendererStatus.office) : 'unknown',
     },
     availableOutputs: mappedOutputs(raw.outputs),
     languageCapabilities: MOCK_LANGUAGE_CAPABILITIES,

@@ -23,9 +23,18 @@ SetCompressor /SOLID lzma
 !ifndef PUBLISHER
   !error "PUBLISHER is required"
 !endif
+!ifndef VERSION
+  !error "VERSION is required"
+!endif
+!ifndef PRODUCT_VERSION
+  !error "PRODUCT_VERSION is required"
+!endif
+!ifndef WEBVIEW2_BOOTSTRAPPER
+  !error "WEBVIEW2_BOOTSTRAPPER is required"
+!endif
 
 Name "Bookflow Scholar"
-Caption "Bookflow Scholar 0.8.0-rc.2"
+Caption "Bookflow Scholar ${VERSION}"
 OutFile "${OUTPUT_INSTALLER}"
 InstallDir "$LOCALAPPDATA\Programs\Bookflow Scholar"
 InstallDirRegKey HKCU "Software\Bookflow Scholar" "InstallLocation"
@@ -35,10 +44,10 @@ BrandingText "Bookflow Scholar · ${PUBLISHER}"
 ShowInstDetails show
 ShowUninstDetails show
 
-VIProductVersion "0.8.0.2"
+VIProductVersion "${PRODUCT_VERSION}"
 VIAddVersionKey /LANG=1033 "ProductName" "Bookflow Scholar"
-VIAddVersionKey /LANG=1033 "ProductVersion" "0.8.0-rc.2"
-VIAddVersionKey /LANG=1033 "FileVersion" "0.8.0.2"
+VIAddVersionKey /LANG=1033 "ProductVersion" "${VERSION}"
+VIAddVersionKey /LANG=1033 "FileVersion" "${PRODUCT_VERSION}"
 VIAddVersionKey /LANG=1033 "CompanyName" "${PUBLISHER}"
 VIAddVersionKey /LANG=1033 "FileDescription" "Bookflow Scholar current-user installer"
 VIAddVersionKey /LANG=1033 "LegalCopyright" "Copyright 2026 ${PUBLISHER}"
@@ -71,31 +80,32 @@ FunctionEnd
 
 Function EnsureWebView2
   ClearErrors
+  SetRegView 64
   ReadRegStr $0 HKCU "Software\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" "pv"
   ${If} $0 == ""
     ReadRegStr $0 HKLM "Software\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" "pv"
   ${EndIf}
   ${If} $0 == ""
-    ReadRegStr $0 HKLM "Software\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" "pv"
+    SetRegView 32
+    ReadRegStr $0 HKCU "Software\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" "pv"
   ${EndIf}
+  ${If} $0 == ""
+    ReadRegStr $0 HKLM "Software\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" "pv"
+  ${EndIf}
+  SetRegView 32
   ${If} $0 != ""
     DetailPrint "Microsoft Edge WebView2 Runtime detected: $0"
     Return
   ${EndIf}
 
-  DetailPrint "Downloading the Microsoft Edge WebView2 bootstrapper..."
-  NSISdl::download /TIMEOUT=60000 \
-    "https://go.microsoft.com/fwlink/p/?LinkId=2124703" \
-    "$TEMP\MicrosoftEdgeWebview2Setup.exe"
+  DetailPrint "Installing Microsoft Edge WebView2 Runtime..."
+  InitPluginsDir
+  SetOutPath "$PLUGINSDIR"
+  File /oname=MicrosoftEdgeWebview2Setup.exe "${WEBVIEW2_BOOTSTRAPPER}"
+  nsExec::ExecToLog '"$PLUGINSDIR\MicrosoftEdgeWebview2Setup.exe" /silent /install'
   Pop $0
-  ${If} $0 != "success"
-    MessageBox MB_ICONSTOP|MB_OK "无法下载 Microsoft Edge WebView2 Runtime：$0"
-    Abort
-  ${EndIf}
-  nsExec::ExecToLog '"$TEMP\MicrosoftEdgeWebview2Setup.exe" /silent /install'
-  Pop $0
-  Delete "$TEMP\MicrosoftEdgeWebview2Setup.exe"
   ${If} $0 != "0"
+  ${AndIf} $0 != "3010"
     MessageBox MB_ICONSTOP|MB_OK "Microsoft Edge WebView2 Runtime 安装失败：$0"
     Abort
   ${EndIf}
@@ -119,7 +129,7 @@ Section "Bookflow Scholar" SecMain
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Bookflow Scholar" \
     "DisplayName" "Bookflow Scholar"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Bookflow Scholar" \
-    "DisplayVersion" "0.8.0-rc.2"
+    "DisplayVersion" "${VERSION}"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Bookflow Scholar" \
     "Publisher" "${PUBLISHER}"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Bookflow Scholar" \

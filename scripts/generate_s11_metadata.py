@@ -68,6 +68,7 @@ def main() -> int:
     parser.add_argument("--sidecar-dir", type=Path, required=True)
     parser.add_argument("--installer", type=Path, required=True)
     parser.add_argument("--portable", type=Path)
+    parser.add_argument("--webview2-bootstrapper", type=Path, required=True)
     parser.add_argument("--version", required=True)
     parser.add_argument("--repo-root", type=Path, required=True)
     args = parser.parse_args()
@@ -76,6 +77,7 @@ def main() -> int:
     sidecar_dir = args.sidecar_dir.resolve()
     installer = args.installer.resolve()
     portable = args.portable.resolve() if args.portable else None
+    webview2_bootstrapper = args.webview2_bootstrapper.resolve()
     repo_root = args.repo_root.resolve()
     release_dir.mkdir(parents=True, exist_ok=True)
 
@@ -98,6 +100,31 @@ def main() -> int:
     }
     manifest_path = release_dir / "sidecar-manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    runtime_prerequisites = {
+        "schema_version": 1,
+        "product": "Bookflow Scholar",
+        "version": args.version,
+        "required": [{
+            "name": "Microsoft Edge WebView2 Runtime",
+            "distribution": "Evergreen Bootstrapper",
+            "bootstrapper_filename": webview2_bootstrapper.name,
+            "bootstrapper_sha256": sha256(webview2_bootstrapper),
+            "installation": "checked and installed by setup.exe or the portable launcher",
+            "requires_network_when_missing": True,
+        }],
+        "optional": [{
+            "name": "LibreOffice",
+            "bundled": False,
+            "purpose": "optional Office/DOCX compatibility rendering",
+            "core_pdf_renderer": "native_pdf",
+            "core_pdf_outputs_require_libreoffice": False,
+            "homepage": "https://www.libreoffice.org/download/",
+        }],
+    }
+    runtime_manifest_path = release_dir / "runtime-prerequisites.json"
+    runtime_manifest_path.write_text(
+        json.dumps(runtime_prerequisites, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     python_components = []
     license_rows = []
@@ -156,7 +183,20 @@ def main() -> int:
                 "version": args.version,
             }
         },
-        "components": python_components + rust_components + npm_components,
+        "components": python_components + rust_components + npm_components + [{
+            "type": "application",
+            "name": "Microsoft Edge WebView2 Evergreen Bootstrapper",
+            "version": "evergreen",
+            "scope": "required",
+            "externalReferences": [{
+                "type": "website",
+                "url": "https://developer.microsoft.com/microsoft-edge/webview2/",
+            }],
+            "hashes": [{
+                "alg": "SHA-256",
+                "content": sha256(webview2_bootstrapper),
+            }],
+        }],
     }
     (release_dir / "sbom.cdx.json").write_text(
         json.dumps(sbom, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -174,6 +214,12 @@ def main() -> int:
         license_lines.append(
             f"| {ecosystem} | {name.replace('|', '/')} | {version} | "
             f"{license_name.replace('|', '/')} | {homepage.replace('|', '%7C')} |")
+    license_lines.append(
+        "| Runtime prerequisite | Microsoft Edge WebView2 Evergreen Bootstrapper | Evergreen | "
+        "Microsoft Software License Terms | https://developer.microsoft.com/microsoft-edge/webview2/ |")
+    license_lines.append(
+        "| Optional external tool | LibreOffice | User-installed | MPL-2.0 / LGPL-3.0-or-later | "
+        "https://www.libreoffice.org/download/ |")
     (release_dir / "THIRD_PARTY_LICENSES.md").write_text(
         "\n".join(license_lines) + "\n", encoding="utf-8")
 
@@ -184,6 +230,7 @@ def main() -> int:
         f"{sha256(installer)}  {installer.name}",
         f"{sidecar_tree_hash}  bookflow-sidecar.tree",
         f"{sha256(manifest_path)}  {manifest_path.name}",
+        f"{sha256(runtime_manifest_path)}  {runtime_manifest_path.name}",
         f"{sha256(release_dir / 'sbom.cdx.json')}  sbom.cdx.json",
         f"{sha256(release_dir / 'THIRD_PARTY_LICENSES.md')}  THIRD_PARTY_LICENSES.md",
     ]
@@ -191,6 +238,10 @@ def main() -> int:
         if not portable.is_file():
             raise FileNotFoundError(f"Portable archive not found: {portable}")
         hashes.insert(1, f"{sha256(portable)}  {portable.name}")
+    for document_name in ("INSTALLATION.md", "RELEASE_NOTES.md", "OPEN_ISSUES.md"):
+        document_path = release_dir / document_name
+        if document_path.is_file():
+            hashes.append(f"{sha256(document_path)}  {document_name}")
     (release_dir / "SHA256SUMS.txt").write_text("\n".join(hashes) + "\n", encoding="ascii")
     return 0
 

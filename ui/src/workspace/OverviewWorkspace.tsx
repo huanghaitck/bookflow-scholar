@@ -629,6 +629,7 @@ function ServiceMonitor({ snapshot, locale }: { snapshot: BookflowSnapshot; loca
           </div>
         ))}
         <div><ScanText size={14} /><span>{translate(locale, 'pdfRenderer')}</span><strong>{localizeDisplayValue(snapshot.rendererStatus.pdf, locale)}</strong></div>
+        <div><ScanText size={14} /><span>{translate(locale, 'officeRendererOptional')}</span><strong>{localizeDisplayValue(snapshot.rendererStatus.office, locale)}</strong></div>
       </div>
     </div>
   );
