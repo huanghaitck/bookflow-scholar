@@ -1,5 +1,5 @@
 param(
-    [string]$Version = '0.8.0-rc.2'
+    [string]$Version = '0.8.0-rc.3'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -22,17 +22,30 @@ if (Test-Path -LiteralPath $Stage) {
 }
 
 Expand-Archive -LiteralPath $Archive -DestinationPath $Stage
-$App = Join-Path $Stage 'Bookflow Scholar.exe'
-$Client = Start-Process -FilePath $App -PassThru -WindowStyle Hidden
+$Launcher = Join-Path $Stage 'Bookflow Scholar.exe'
+$App = Join-Path $Stage 'bookflow-desktop.exe'
+$Bootstrapper = Join-Path $Stage 'MicrosoftEdgeWebview2Setup.exe'
+foreach ($Required in @($Launcher, $App, $Bootstrapper)) {
+    if (-not (Test-Path -LiteralPath $Required -PathType Leaf)) {
+        throw "Portable package is missing required file: $Required"
+    }
+}
+$Signature = Get-AuthenticodeSignature -LiteralPath $Bootstrapper
+$Subject = if ($Signature.SignerCertificate) { $Signature.SignerCertificate.Subject } else { '' }
+if ($Signature.Status -ne 'Valid' -or $Subject -notmatch 'Microsoft Corporation') {
+    throw "Portable WebView2 bootstrapper signature is invalid: $($Signature.Status) $Subject"
+}
+
+$LauncherProcess = Start-Process -FilePath $Launcher -PassThru -WindowStyle Hidden
+$LauncherProcess.WaitForExit(30000) | Out-Null
 Start-Sleep -Seconds 8
-if ($Client.HasExited) {
-    throw "Portable app exited early: $($Client.ExitCode)"
+$Client = Get-CimInstance Win32_Process | Where-Object {
+    $_.ExecutablePath -and $_.ExecutablePath.Equals($App, [System.StringComparison]::OrdinalIgnoreCase)
+} | Select-Object -First 1
+if (-not $Client) {
+    throw 'Portable launcher did not start the internal Bookflow desktop executable.'
 }
-$Client.CloseMainWindow() | Out-Null
-Start-Sleep -Seconds 3
-if (-not $Client.HasExited) {
-    Stop-Process -Id $Client.Id -Force
-}
+Stop-Process -Id $Client.ProcessId -Force -ErrorAction SilentlyContinue
 
 $Remaining = Get-CimInstance Win32_Process | Where-Object {
     $_.ExecutablePath -and $_.ExecutablePath.StartsWith(
