@@ -2,7 +2,7 @@ param(
     [string]$PythonExecutable = (
         Join-Path ([Environment]::GetFolderPath('UserProfile')) '.conda\envs\bilingual-book\python.exe'
     ),
-    [string]$Version = '0.8.0-rc.4',
+    [string]$Version = '0.8.0-rc.5',
     [string]$NsisCompiler = '',
     [string]$Publisher = 'huanghaitck'
 )
@@ -18,7 +18,7 @@ $DefaultsResourceDir = Join-Path $RepoRoot 'ui\src-tauri\resources\defaults'
 $BuildLog = Join-Path $ReleaseDir 'S11_BUILD.log'
 $ExpectedInstaller = "Bookflow-Scholar-$Version-setup.exe"
 $ExpectedPortable = "Bookflow-Scholar-$Version-portable-win-x64.zip"
-$ProductVersion = '0.8.0.4'
+$ProductVersion = '0.8.0.5'
 $PortableCoreName = 'bookflow-desktop.exe'
 $WebView2Bootstrapper = Join-Path $BuildRoot 'webview2\MicrosoftEdgeWebview2Setup.exe'
 $WebView2BootstrapperUrl = 'https://go.microsoft.com/fwlink/p/?LinkId=2124703'
@@ -27,8 +27,8 @@ $OpenSslDll = Join-Path $PythonRoot 'Library\bin\libssl-3-x64.dll'
 $CryptoDll = Join-Path $PythonRoot 'Library\bin\libcrypto-3-x64.dll'
 $AppExecutable = Join-Path $RepoRoot 'ui\src-tauri\target\release\bookflow-desktop.exe'
 
-if ($Version -ne '0.8.0-rc.4') {
-    throw 'The approved OCR recovery and progress hotfix version is 0.8.0-rc.4.'
+if ($Version -ne '0.8.0-rc.5') {
+    throw 'The approved difficult-page round-trip hotfix version is 0.8.0-rc.5.'
 }
 if (-not (Test-Path -LiteralPath $PythonExecutable -PathType Leaf)) {
     throw "Approved Python interpreter not found: $PythonExecutable"

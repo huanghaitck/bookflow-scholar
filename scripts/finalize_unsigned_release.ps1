@@ -2,7 +2,7 @@ param(
     [string]$PythonExecutable = (
         Join-Path ([Environment]::GetFolderPath('UserProfile')) '.conda\envs\bilingual-book\python.exe'
     ),
-    [string]$Version = '0.8.0-rc.4',
+    [string]$Version = '0.8.0-rc.5',
     [string]$Publisher = 'huanghaitck'
 )
 
@@ -16,12 +16,12 @@ $NsisCompiler = (Resolve-Path (Join-Path $BuildRoot 'nsis-3.12\makensis.exe')).P
 $Installer = Join-Path $ReleaseDir "Bookflow-Scholar-$Version-setup.exe"
 $Portable = Join-Path $ReleaseDir "Bookflow-Scholar-$Version-portable-win-x64.zip"
 $Stage = Join-Path $BuildRoot "portable-final-$Version"
-$ProductVersion = '0.8.0.4'
+$ProductVersion = '0.8.0.5'
 $PortableCoreName = 'bookflow-desktop.exe'
 $WebView2Bootstrapper = (Resolve-Path (Join-Path $BuildRoot 'webview2\MicrosoftEdgeWebview2Setup.exe')).Path
 
-if ($Version -ne '0.8.0-rc.4') {
-    throw 'Only the approved 0.8.0-rc.4 OCR recovery and progress hotfix may be finalized by this script.'
+if ($Version -ne '0.8.0-rc.5') {
+    throw 'Only the approved 0.8.0-rc.5 difficult-page round-trip hotfix may be finalized by this script.'
 }
 
 $WebView2Signature = Get-AuthenticodeSignature -LiteralPath $WebView2Bootstrapper

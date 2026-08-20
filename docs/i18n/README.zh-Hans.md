@@ -1,6 +1,6 @@
 # Bookflow Scholar 使用手册（简体中文）
 
-[下载](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.4) · [提交使用问题](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 开发计划](../ROADMAP_1.0.md) · [返回首页](../../README.md)
+[下载](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.5) · [提交使用问题](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 开发计划](../ROADMAP_1.0.md) · [返回首页](../../README.md)
 
 ## 它解决什么问题
 
@@ -19,7 +19,7 @@ Bookflow Scholar 是面向论文、书籍和专著的 Windows 桌面翻译与版
 
 ## 从零开始使用
 
-1. 下载并安装 `Bookflow-Scholar-0.8.0-rc.4-setup.exe`。若不想安装，可解压 portable ZIP 后运行 `Bookflow Scholar.exe`。
+1. 下载并安装 `Bookflow-Scholar-0.8.0-rc.5-setup.exe`。若不想安装，可解压 portable ZIP 后运行 `Bookflow Scholar.exe`。
 2. 首次打开后点击 **创建项目**。必须先有项目，PDF 才有明确的保存位置和上下文。
 3. 打开项目，在设置中填写文本模型与视觉模型 Provider、模型名和 API Key，然后保存。Key 进入 Windows 凭据管理器，不写入项目文件。
 4. 点击 **导入 PDF**，选择原文语言和目标语言。多 Source 项目必须明确选中当前 Source。

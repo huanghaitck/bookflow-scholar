@@ -590,7 +590,11 @@ def test_two_page_bad_ocr_page_is_reviewed_without_blocking_healthy_page(tmp_pat
     workspace = Path(job["pipeline_details"]["workspace"])
     units = [json.loads(line) for line in
              (workspace / "data/translation_units.jsonl").read_text("utf-8").splitlines() if line]
-    assert units and {int(unit["source_page"]) for unit in units} == {1}
+    assert {int(unit["source_page"]) for unit in units} == {1, 2}
+    review_unit = next(unit for unit in units if unit.get("review_only"))
+    assert review_unit["source_page"] == 2
+    assert review_unit["status"] == "review_required"
+    assert not (workspace / "cache/en-de" / f"{review_unit['translation_unit_id']}.json").exists()
     assert (Path(job["output_path"]) / "HUMAN_REVIEW_QUEUE.json").is_file()
 
 

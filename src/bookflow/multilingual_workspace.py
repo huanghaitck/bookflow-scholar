@@ -553,6 +553,12 @@ def rebuild_structured_translation_units(
     if not classification_path.is_file():
         raise RuntimeError("structured translation units require page classification")
     classifications = {int(item["physical_page"]): item for item in _jsonl(classification_path)}
+    route_path = workspace / "data/ocr_routes.jsonl"
+    review_routes = {
+        int(str(item.get("page_id") or "page-0").rsplit("-", 1)[-1]): item
+        for item in (_jsonl(route_path) if route_path.is_file() else [])
+        if str(item.get("status") or "") != "accepted"
+    }
     document = fitz.open(Path(manifest["source_pdf"]))
     page_blocks: dict[int, list[dict[str, Any]]] = {}
     edge_occurrences: dict[tuple[str, str], set[int]] = {}
@@ -700,6 +706,34 @@ def rebuild_structured_translation_units(
                                           "bbox": [float(value) for value in bbox],
                                           "visual_index": visual_index, "object_type": visual.get("type")})
             known_notes = notes_for_page(page_no)
+            if not blocks and page_no in review_routes:
+                route = review_routes[page_no]
+                stable = f"{manifest['source_pdf_sha256']}|{page_no}|review_required"
+                uid = "tu_review_" + hashlib.sha256(stable.encode("utf-8")).hexdigest()[:20]
+                source_object_id = f"page-{page_no:04d}-review-required-0001"
+                unit = {
+                    "translation_unit_id": uid,
+                    "source_object_id": source_object_id,
+                    "source_block_id": source_object_id,
+                    "source_page": page_no,
+                    "source_text": "",
+                    "source_text_sha256": hashlib.sha256(b"").hexdigest(),
+                    "source_language": manifest["source_language"],
+                    "target_language": manifest["target_language"],
+                    "status": "review_required",
+                    "review_only": True,
+                    "review_issue_codes": list(route.get("issue_codes") or []),
+                    "element_type": "body",
+                    "bbox": [0.08, 0.10, 0.92, 0.90],
+                    "reading_order": [0.10, 0.08, 0, 1, 1],
+                }
+                units.append(unit)
+                page_elements.append({
+                    "element_type": "body", "source_page": page_no,
+                    "bbox": unit["bbox"], "translation_unit_id": uid,
+                    "source_object_id": source_object_id, "review_only": True,
+                })
+                element_counts["review_required"] += 1
             for block_index, block in enumerate(blocks, 1):
                 bbox = block["bbox"]; element_type = block_types[(page_no, block_index)]
                 if element_type == "visual_text":
@@ -816,7 +850,8 @@ def plan_workspace(workspace: Path) -> dict[str, Any]:
     workspace = workspace.resolve(); manifest = _load(workspace)
     units = _jsonl(workspace / "data/translation_units.jsonl")
     cache_dir = workspace / "cache" / manifest["language_pair"]
-    pending = [u for u in units if not (cache_dir / f"{u['translation_unit_id']}.json").is_file()]
+    pending = [u for u in units if not u.get("review_only")
+               and not (cache_dir / f"{u['translation_unit_id']}.json").is_file()]
     report = {"workspace_id": manifest["workspace_id"], "language_pair": manifest["language_pair"],
               "unit_count": len(units), "pending": len(pending), "cached": len(units) - len(pending),
               "roles": list(OUTPUT_ROLES), "api_calls": 0}
@@ -850,7 +885,8 @@ def translate_workspace(workspace: Path, provider: Any, *, provider_name: str = 
                 unit["source_text"] = str(correction)
                 unit["source_text_sha256"] = hashlib.sha256(str(correction).encode("utf-8")).hexdigest()
     cache_dir = workspace / "cache" / manifest["language_pair"]; cache_dir.mkdir(parents=True, exist_ok=True)
-    pending = [u for u in units if not (cache_dir / f"{u['translation_unit_id']}.json").is_file()]
+    pending = [u for u in units if not u.get("review_only")
+               and not (cache_dir / f"{u['translation_unit_id']}.json").is_file()]
     if max_units is not None: pending = pending[:max_units]
     pending_ids = {str(unit["translation_unit_id"]) for unit in pending}
     units_by_id = {str(unit["translation_unit_id"]): unit for unit in units}
@@ -999,7 +1035,8 @@ def _content(workspace: Path, role: str) -> tuple[dict[str, Any], list[tuple[str
         target = json.loads(cache.read_text("utf-8"))["translated_text"] if cache.is_file() else ""
         overlay = overlays.get(unit["source_object_id"], {})
         source = overlay.get("source_text", unit["source_text"]); target = overlay.get("translated_text", target)
-        if role != "source" and not target: raise RuntimeError(f"missing translation: {unit['translation_unit_id']}")
+        if role != "source" and not target and not unit.get("review_only"):
+            raise RuntimeError(f"missing translation: {unit['translation_unit_id']}")
         values.append((source, target, int(unit["source_page"])))
     return manifest, values
 
@@ -1321,7 +1358,7 @@ def _anchored_publication_pages(workspace: Path, role: str, manifest: dict[str, 
             unit["source_text"] = str(overlay["source_text"])
         if "translated_text" in overlay:
             unit["translated_text"] = str(overlay["translated_text"])
-        if role != "source" and not unit["translated_text"]:
+        if role != "source" and not unit["translated_text"] and not unit.get("review_only"):
             raise RuntimeError(f"missing translation: {uid}")
     pages: dict[int, list[dict[str, Any]]] = {}
     marker_labels: dict[int, tuple[str, str]] = {}
