@@ -364,7 +364,9 @@ Rules:
    footnotes, endnotes, captions, tables, and body prose.
 5. If an object cannot be resolved, mark it needs_human_review.
 6. Whole-page free text may be supplied for preview, but Bookflow will not apply it.
-7. Return the same JSON, XLSX, or CSV structure without macros or executable content.
+7. For a review-only object with no accepted OCR text, provide both corrected_source_text
+   and corrected_translated_text before setting review_status to resolved.
+8. Return the same JSON, XLSX, or CSV structure without macros or executable content.
 """
 
 
@@ -440,37 +442,37 @@ Edite solo user_final_translation, preserve_original, user_note y review_status.
 
 必须使用支持图片输入的视觉/多模态模型。请同时检查页面图片、OCR、版面对象、对象 ID、元素类型、边界框和说明，不得只根据抽取文本判断。
 
-只能通过 object_corrections 修正单个对象，并保留 source_object_id 和 translation_unit_id。对象内只能编辑 corrected_source_text、corrected_translated_text、structure_note、review_status。不得把整页压平、删除无关对象或混合页眉、页脚、脚注、尾注、图注、表格和正文。无法解决的对象标记为 needs_human_review；整页自由文本只能预览。按原结构返回，不得加入可执行内容。
+只能通过 object_corrections 修正单个对象，并保留 source_object_id 和 translation_unit_id。对象内只能编辑 corrected_source_text、corrected_translated_text、structure_note、review_status。对于没有合格 OCR 的 review-only 对象，必须同时填写校正原文和对应译文，才能标记 resolved。不得把整页压平、删除无关对象或混合页眉、页脚、脚注、尾注、图注、表格和正文。无法解决的对象标记为 needs_human_review；整页自由文本只能预览。按原结构返回，不得加入可执行内容。
 """,
         "en": """# Bookflow official difficult-page prompt
 
 Use a vision-capable multimodal model. Inspect the page image together with OCR, layout objects, object IDs, element types, bounding boxes, and notes; do not decide from extracted text alone.
 
-Correct individual objects only through object_corrections and retain source_object_id and translation_unit_id. Edit only corrected_source_text, corrected_translated_text, structure_note, and review_status. Never flatten a page, delete unrelated objects, or mix headers, footers, footnotes, endnotes, captions, tables, and body prose. Mark unresolved objects needs_human_review; whole-page free text is preview-only. Return the same structure without executable content.
+Correct individual objects only through object_corrections and retain source_object_id and translation_unit_id. Edit only corrected_source_text, corrected_translated_text, structure_note, and review_status. For a review-only object with no accepted OCR, provide both corrected source and translation before marking it resolved. Never flatten a page, delete unrelated objects, or mix headers, footers, footnotes, endnotes, captions, tables, and body prose. Mark unresolved objects needs_human_review; whole-page free text is preview-only. Return the same structure without executable content.
 """,
         "fr": """# Invite officielle Bookflow pour les pages difficiles
 
 Utilisez un modèle multimodal acceptant les images. Examinez ensemble l’image de page, l’OCR, les objets de mise en page, leurs identifiants, types, cadres et notes ; ne décidez pas à partir du seul texte extrait.
 
-Corrigez les objets uniquement dans object_corrections en conservant source_object_id et translation_unit_id. Modifiez seulement corrected_source_text, corrected_translated_text, structure_note et review_status. N’aplatissez pas la page et ne mélangez pas en-têtes, pieds, notes, légendes, tableaux et corps du texte. Marquez needs_human_review les objets non résolus ; le texte libre de page entière sert uniquement à l’aperçu.
+Corrigez les objets uniquement dans object_corrections en conservant source_object_id et translation_unit_id. Modifiez seulement corrected_source_text, corrected_translated_text, structure_note et review_status. Pour un objet review-only sans OCR accepté, fournissez le texte source corrigé et sa traduction avant de le marquer resolved. N’aplatissez pas la page et ne mélangez pas en-têtes, pieds, notes, légendes, tableaux et corps du texte. Marquez needs_human_review les objets non résolus ; le texte libre de page entière sert uniquement à l’aperçu.
 """,
         "de": """# Offizieller Bookflow-Prompt für schwierige Seiten
 
 Verwende ein bildfähiges multimodales Modell. Prüfe Seitenbild, OCR, Layoutobjekte, Objekt-IDs, Elementtypen, Begrenzungsrahmen und Hinweise gemeinsam; entscheide nicht nur anhand des extrahierten Textes.
 
-Korrigiere einzelne Objekte nur in object_corrections und behalte source_object_id sowie translation_unit_id bei. Bearbeite nur corrected_source_text, corrected_translated_text, structure_note und review_status. Verflache keine Seite und vermische keine Kopf- oder Fußzeilen, Fuß- oder Endnoten, Bildtexte, Tabellen und Fließtexte. Markiere ungelöste Objekte mit needs_human_review; Ganzseiten-Freitext dient nur der Vorschau.
+Korrigiere einzelne Objekte nur in object_corrections und behalte source_object_id sowie translation_unit_id bei. Bearbeite nur corrected_source_text, corrected_translated_text, structure_note und review_status. Für ein review-only-Objekt ohne akzeptierte OCR müssen Quelltext und Übersetzung vor resolved ausgefüllt werden. Verflache keine Seite und vermische keine Kopf- oder Fußzeilen, Fuß- oder Endnoten, Bildtexte, Tabellen und Fließtexte. Markiere ungelöste Objekte mit needs_human_review; Ganzseiten-Freitext dient nur der Vorschau.
 """,
         "ja": """# Bookflow 公式難ページレビュー用プロンプト
 
 画像入力に対応する視覚・マルチモーダルモデルを必ず使用してください。ページ画像、OCR、レイアウトオブジェクト、オブジェクト ID、要素種別、境界ボックス、注記を一緒に確認し、抽出テキストだけで判断しないでください。
 
-object_corrections 内で個別オブジェクトだけを修正し、source_object_id と translation_unit_id を保持します。編集できるのは corrected_source_text、corrected_translated_text、structure_note、review_status だけです。ページを平坦化せず、ヘッダー、フッター、脚注、後注、キャプション、表、本文を混在させません。未解決は needs_human_review とし、ページ全体の自由文はプレビュー専用です。
+object_corrections 内で個別オブジェクトだけを修正し、source_object_id と translation_unit_id を保持します。編集できるのは corrected_source_text、corrected_translated_text、structure_note、review_status だけです。OCR が承認されていない review-only オブジェクトは、校正原文と対応訳文の両方を入力してから resolved にします。ページを平坦化せず、ヘッダー、フッター、脚注、後注、キャプション、表、本文を混在させません。未解決は needs_human_review とし、ページ全体の自由文はプレビュー専用です。
 """,
         "es": """# Prompt oficial de Bookflow para páginas difíciles
 
 Use obligatoriamente un modelo multimodal que acepte imágenes. Examine en conjunto la imagen, el OCR, los objetos de diseño, sus identificadores, tipos, cuadros y notas; no decida solo con el texto extraído.
 
-Corrija objetos individuales únicamente mediante object_corrections y conserve source_object_id y translation_unit_id. Edite solo corrected_source_text, corrected_translated_text, structure_note y review_status. No aplane la página ni mezcle encabezados, pies, notas, leyendas, tablas y texto principal. Marque needs_human_review los objetos sin resolver; el texto libre de página completa es solo para vista previa.
+Corrija objetos individuales únicamente mediante object_corrections y conserve source_object_id y translation_unit_id. Edite solo corrected_source_text, corrected_translated_text, structure_note y review_status. Para un objeto review-only sin OCR aceptado, complete tanto el texto fuente corregido como su traducción antes de marcarlo resolved. No aplane la página ni mezcle encabezados, pies, notas, leyendas, tablas y texto principal. Marque needs_human_review los objetos sin resolver; el texto libre de página completa es solo para vista previa.
 """,
     }
     prompt_id = GLOSSARY_PROMPT_ID if package_type == "glossary_review" else DIFFICULT_PROMPT_ID
@@ -776,6 +778,14 @@ class WebAssistService:
                             imported_value=sorted(unknown_fields), recommended_action="remove_fields",
                         ))
                     expected = known_objects[object_id]
+                    corrected_source = str(correction.get("corrected_source_text") or "").strip()
+                    corrected_translation = str(correction.get("corrected_translated_text") or "").strip()
+                    if expected.get("review_only") and (not corrected_source or not corrected_translation):
+                        conflicts.append(WebAssistConflict(
+                            "review_object_requires_source_and_translation", item_id,
+                            imported_value=object_id,
+                            recommended_action="supply_corrected_source_and_translation",
+                        ))
                     if (str(correction.get("translation_unit_id") or "")
                             != str(expected.get("translation_unit_id") or "")):
                         conflicts.append(WebAssistConflict(
@@ -788,8 +798,7 @@ class WebAssistService:
                             "object_source_changed", item_id, imported_value=object_id,
                             recommended_action="re-export",
                         ))
-                    if (str(correction.get("corrected_source_text") or "").strip()
-                            and not str(correction.get("corrected_translated_text") or "").strip()):
+                    if corrected_source and not corrected_translation:
                         conflicts.append(WebAssistConflict(
                             "missing_corresponding_translation", item_id,
                             imported_value=object_id,
@@ -901,6 +910,7 @@ class WebAssistService:
                     invalidated_units.add(unit["translation_unit_id"])
             affected_roles = ["target", "bilingual"]
         else:
+            resolved_review_pages: set[int] = set()
             for row in rows:
                 item = originals.get(str(row.get(id_field, "")))
                 if not item:
@@ -919,9 +929,14 @@ class WebAssistService:
                         record.pop("translated_text", None)
                     if corrected_translation:
                         record["translated_text"] = corrected_translation
+                    review_status = str(correction.get("review_status") or "pending").strip().lower()
+                    record["review_status"] = review_status
                     record["provenance"] = {"source": "web_assist_difficult_page", "package_id": package_id,
                                             "physical_page": int(item["page_number"])}
                     overlays[unit["source_object_id"]] = record
+                    if (unit.get("review_only") and corrected_source and corrected_translation
+                            and review_status in {"approved", "resolved"}):
+                        resolved_review_pages.add(int(unit["source_page"]))
                     if corrected_source and not corrected_translation:
                         cache_path = cache_dir / f"{unit['translation_unit_id']}.json"
                         if cache_path.is_file():
@@ -930,6 +945,24 @@ class WebAssistService:
                             shutil.copy2(cache_path, backup)
                             cache_path.unlink()
                     invalidated_units.add(unit["translation_unit_id"])
+            if resolved_review_pages:
+                intake_path = workspace / "data/page_intake_summary.json"
+                if intake_path.is_file():
+                    shutil.copy2(intake_path, revision / "page_intake.before.json")
+                    intake = json.loads(intake_path.read_text("utf-8"))
+                    intake["review_pages"] = [
+                        page for page in intake.get("review_pages", [])
+                        if int(page) not in resolved_review_pages
+                    ]
+                    intake["translation_excluded_pages"] = [
+                        page for page in intake.get("translation_excluded_pages", [])
+                        if int(page) not in resolved_review_pages
+                    ]
+                    for detail in intake.get("review_page_details", []):
+                        if int(detail.get("page", 0)) in resolved_review_pages:
+                            detail["status"] = "resolved"
+                            detail["resolved_by"] = "web_assist_object_correction"
+                    _write_json(intake_path, intake)
             affected_roles = ["source", "target", "bilingual"]
         _write_json(overlay_path, {"schema_version": "manual_review_objects.v1", "objects": list(overlays.values()),
                                   "web_assist_package_id": package_id})
@@ -980,6 +1013,9 @@ class WebAssistService:
         cache_dir = workspace / "cache" / manifest["language_pair"]
         for backup in (revision / "cache").glob("*.json") if (revision / "cache").is_dir() else []:
             shutil.copy2(backup, cache_dir / backup.name)
+        intake_backup = revision / "page_intake.before.json"
+        if intake_backup.is_file():
+            shutil.copy2(intake_backup, workspace / "data/page_intake_summary.json")
         application["undone"] = True
         application["undone_at"] = _now()
         state["status"] = "undone"
@@ -1136,6 +1172,21 @@ class WebAssistService:
         units_by_page: dict[int, list[dict[str, Any]]] = {}
         for unit in units:
             units_by_page.setdefault(int(unit.get("source_page") or 0), []).append(unit)
+        overlay_path = workspace / "manual_review/imported_objects.json"
+        overlays: dict[str, dict[str, Any]] = {}
+        if overlay_path.is_file():
+            overlay_payload = json.loads(overlay_path.read_text("utf-8"))
+            overlay_rows = overlay_payload.get("objects", overlay_payload)
+            overlays = {
+                str(item["object_id"]): item for item in overlay_rows
+                if isinstance(item, dict) and item.get("object_id")
+            }
+        resolved_review_pages = {
+            int(unit.get("source_page") or 0) for unit in units
+            if unit.get("review_only")
+            and str(overlays.get(str(unit["source_object_id"]), {}).get("review_status") or "").lower()
+            in {"approved", "resolved"}
+        }
         review_pages = {
             int(value) for value in workspace_manifest.get("review_pages", [])
             if str(value).isdigit()
@@ -1168,6 +1219,7 @@ class WebAssistService:
                         or flags):
                     review_pages.add(page_no)
                     issue_codes.setdefault(page_no, set()).update(str(value) for value in flags)
+        review_pages.difference_update(resolved_review_pages)
         document = fitz.open(path)
         items: list[dict[str, Any]] = []
         try:
@@ -1198,6 +1250,7 @@ class WebAssistService:
                         "translated_text": translated,
                         "source_text_sha256": hashlib.sha256(source_text.encode("utf-8")).hexdigest(),
                         "translated_text_sha256": hashlib.sha256(translated.encode("utf-8")).hexdigest(),
+                        "review_only": bool(unit.get("review_only")),
                     })
                 current_markdown = "\n\n".join(
                     str(item["source_text"]) for item in object_rows if item["source_text"]
@@ -1275,7 +1328,8 @@ class WebAssistService:
             ]
             Path(f"{base}.answer.md").write_text(
                 "# Structured object corrections\n\n"
-                "<!-- Edit values only. Keep every ID and hash unchanged. -->\n\n"
+                "<!-- Edit values only. Keep every ID and hash unchanged. "
+                "For review-only objects, fill both corrected source and translation. -->\n\n"
                 "```json\n" + json.dumps(corrections, ensure_ascii=False, indent=2)
                 + "\n```\n",
                 "utf-8",

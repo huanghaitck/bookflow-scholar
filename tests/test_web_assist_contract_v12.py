@@ -96,8 +96,12 @@ def test_difficult_page_package_conflicts_and_import_security(tmp_path: Path) ->
     payload_path = export / "difficult_pages_index.json"
     payload = json.loads(payload_path.read_text("utf-8"))
     assert payload["items"]
-    first = payload["items"][0]
-    object_row = first["objects"][0]
+    first = next(
+        item for item in payload["items"]
+        if any(obj.get("review_only") for obj in item.get("objects", []))
+    )
+    object_row = next(obj for obj in first["objects"] if obj.get("review_only"))
+    assert object_row["review_only"] is True
     corrections = [{
         "source_object_id": object_row["source_object_id"],
         "translation_unit_id": object_row["translation_unit_id"],
@@ -124,6 +128,7 @@ def test_difficult_page_package_conflicts_and_import_security(tmp_path: Path) ->
     )
     assert len(overlay["objects"]) == 1
     assert overlay["objects"][0]["source_text"] == "Reviewed page text."
+    assert backend.snapshot(project_id=project_id)["review_queue_count"] == 0
     wrong_source = backend.execute("previewWebAssistDiff", {
         "package_id": package["package_id"], "source_document_id": "source_wrong",
     }, command_id="wrong-source", schema_version="1.2")
