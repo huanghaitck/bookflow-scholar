@@ -103,7 +103,11 @@ function lifecycleState(raw: RawBackendSnapshot): WorkflowState {
 export function mapBackendSnapshot(raw: RawBackendSnapshot): BookflowSnapshot {
   const project = objectValue(raw.active_project);
   const totalUnits = Math.max(0, Math.round(numberValue(raw.total_items)));
-  const completedUnits = Math.min(totalUnits, Math.round(numberValue(raw.aggregate_progress) * totalUnits));
+  const progressRatio = Math.max(0, Math.min(1, numberValue(raw.aggregate_progress)));
+  const completedUnits = Math.min(totalUnits, Math.round(progressRatio * totalUnits));
+  const currentProgress = objectValue((raw as unknown as Record<string, unknown>).current_progress);
+  const detailCompleted = numberValue(currentProgress?.completed_units, numberValue(currentProgress?.completed_pages, -1));
+  const detailTotal = numberValue(currentProgress?.total_units, numberValue(currentProgress?.total_pages, -1));
   const capabilities = objectValue(raw.capabilities);
   const directCommands = arrayValue(capabilities?.direct_commands).filter((item): item is string => typeof item === 'string');
   const adapterCommands = arrayValue(capabilities?.adapter_commands).filter((item): item is string => typeof item === 'string');
@@ -132,7 +136,14 @@ export function mapBackendSnapshot(raw: RawBackendSnapshot): BookflowSnapshot {
     currentStage: stringValue(raw.current_stage, stringValue(raw.pipeline_phase, 'empty')),
     completedUnits,
     totalUnits,
-    reviewQueueCount: numberValue(queue?.review, arrayValue(raw.warnings).length),
+    progressRatio,
+    progressDetail: detailCompleted >= 0 && detailTotal > 0
+      ? { completed: detailCompleted, total: detailTotal }
+      : null,
+    reviewQueueCount: numberValue(
+      (raw as unknown as Record<string, unknown>).review_queue_count,
+      numberValue(queue?.review, arrayValue(raw.warnings).length),
+    ),
     providerStatus: {
       text: providerSummary(arrayValue(raw.provider_configuration), arrayValue(raw.provider_status), 'text'),
       vlm: providerSummary(arrayValue(raw.provider_configuration), arrayValue(raw.provider_status), 'vlm'),

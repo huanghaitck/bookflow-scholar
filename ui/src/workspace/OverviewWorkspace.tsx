@@ -241,17 +241,16 @@ function ProgressPanel({
   snapshot: BookflowSnapshot;
   locale: FrontendPreferences['uiLocale'];
 }) {
-  const percentage = Math.round(
-    (snapshot.completedUnits / Math.max(snapshot.totalUnits, 1)) * 100,
+  const percentage = Math.round(snapshot.progressRatio * 100);
+  const stageValue = (start: number, end: number) => Math.round(
+    Math.max(0, Math.min(1, (snapshot.progressRatio - start) / (end - start))) * 100,
   );
-  const stageOrder = ['workspace', 'text_quality', 'inspect', 'structure', 'plan', 'translation', 'render', 'validate', 'completed'];
-  const activeIndex = Math.max(0, stageOrder.indexOf(snapshot.currentStage));
   const stages = [
-    [translate(locale, 'documentParsing'), activeIndex > 2 ? 100 : percentage],
-    ['结构分析', activeIndex > 3 ? 100 : activeIndex === 3 ? percentage : 0],
-    [translate(locale, 'translationStage'), activeIndex > 5 ? 100 : activeIndex === 5 ? percentage : 0],
-    [translate(locale, 'layoutRebuild'), activeIndex > 6 ? 100 : activeIndex === 6 ? percentage : 0],
-    [translate(locale, 'qualityReview'), snapshot.workflowState === 'completed' ? 100 : activeIndex === 7 ? percentage : 0],
+    [translate(locale, 'documentParsing'), stageValue(0, 0.28)],
+    ['结构分析', stageValue(0.28, 0.5)],
+    [translate(locale, 'translationStage'), stageValue(0.5, 0.81)],
+    [translate(locale, 'layoutRebuild'), stageValue(0.81, 0.94)],
+    [translate(locale, 'qualityReview'), stageValue(0.94, 1)],
   ] as const;
   const commands = deriveCommandAvailability(snapshot);
   return (
@@ -268,6 +267,15 @@ function ProgressPanel({
             <em>{value}%</em>
           </div>
         ))}
+      </div>
+      <div className="progress-context" aria-live="polite">
+        <span>{translate(locale, 'currentStage')}: {localizeDisplayValue(snapshot.currentStage, locale)}</span>
+        {snapshot.progressDetail && (
+          <span>{snapshot.progressDetail.completed}/{snapshot.progressDetail.total}</span>
+        )}
+        {snapshot.reviewQueueCount > 0 && (
+          <span>{translate(locale, 'reviewQueue')}: {snapshot.reviewQueueCount}</span>
+        )}
       </div>
       <div className="workflow-controls">
         <button

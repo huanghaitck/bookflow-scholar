@@ -743,9 +743,27 @@ class BatchBackend:
                         self._event(connection, "pipeline.cancelled", batch_id=batch_id, job_id=job_data["job_id"], payload={"checkpoint_preserved": True})
                 break
             except Exception as exc:
-                error_code = "provider_schema_error" if type(exc).__name__ == "ProviderSchemaError" else "job_failed"
-                envelope = error_envelope(exc, code=error_code, stage="processing", job_id=job_data["job_id"], source_id=job_data["source_id"])
                 with self._connect() as connection:
+                    current_job = connection.execute(
+                        "SELECT stage FROM jobs WHERE job_id=?", (job_data["job_id"],),
+                    ).fetchone()
+                    failure_stage = str(current_job["stage"] if current_job else "processing")
+                    if type(exc).__name__ == "ProviderSchemaError":
+                        error_code = "provider_schema_error"
+                    elif failure_stage == "text_quality":
+                        error_code = "ocr_failed"
+                    elif failure_stage == "structure":
+                        error_code = "structure_failed"
+                    elif failure_stage == "translation":
+                        error_code = "translation_failed"
+                    elif failure_stage in {"render", "validate"}:
+                        error_code = "output_build_failed"
+                    else:
+                        error_code = "job_failed"
+                    envelope = error_envelope(
+                        exc, code=error_code, stage=failure_stage,
+                        job_id=job_data["job_id"], source_id=job_data["source_id"],
+                    )
                     connection.execute("UPDATE jobs SET state='failed',stage='failed',worker_session_id=NULL,error_json=?,updated_at=? WHERE job_id=?", (json.dumps(envelope, ensure_ascii=False), _now(), job_data["job_id"]))
                     self._event(connection, "pipeline.failed", batch_id=batch_id, job_id=job_data["job_id"], payload=envelope)
             processed += 1
@@ -986,6 +1004,27 @@ class BatchBackend:
                             details["artifacts"][name] = json.loads(artifact.read_text("utf-8"))
                         except (OSError, json.JSONDecodeError):
                             details["artifacts"][name] = {"status": "unreadable"}
+                translation_checkpoints = sorted(
+                    (workspace / "checkpoints").glob("translation-*.json"),
+                    key=lambda path: path.stat().st_mtime,
+                    reverse=True,
+                ) if (workspace / "checkpoints").is_dir() else []
+                if translation_checkpoints:
+                    try:
+                        details["artifacts"]["translation_progress"] = json.loads(
+                            translation_checkpoints[0].read_text("utf-8")
+                        )
+                    except (OSError, json.JSONDecodeError):
+                        details["artifacts"]["translation_progress"] = {"status": "unreadable"}
+                latest_progress = connection.execute(
+                    """SELECT payload_json FROM events
+                         WHERE job_id=? AND event_type='pipeline.progress'
+                         ORDER BY sequence DESC LIMIT 1""",
+                    (job["job_id"],),
+                ).fetchone()
+                job["progress_details"] = (
+                    json.loads(latest_progress["payload_json"]) if latest_progress else {}
+                )
                 if job.get("output_path"):
                     manifest = Path(job["output_path"]) / "output_manifest.json"
                     if manifest.is_file():
@@ -1004,6 +1043,19 @@ class BatchBackend:
             current = next((job for job in jobs if job["state"] in {"running", "pausing", "retrying", "recovering", "cancelling"}),
                            next((job for job in jobs if job["state"] in {"queued", "paused"}), None))
         completed = counts.get("completed", 0); total = len(jobs)
+        aggregate_progress = (
+            sum(float(job.get("progress") or 0.0) for job in jobs) / total if total else 0.0
+        )
+        review_queue_count = sum(
+            len((job.get("pipeline_details") or {}).get("artifacts", {}).get("page_intake", {}).get("review_pages", []))
+            for job in jobs
+        )
+        current_details = dict(current.get("progress_details") or {}) if current else {}
+        current_progress = {
+            "stage": current.get("stage") if current else None,
+            "progress": float(current.get("progress") or 0.0) if current else aggregate_progress,
+            **current_details,
+        }
         warnings = [{"warning_id": f"job:{job['job_id']}", "type": "job_failed", "job_id": job["job_id"]} for job in jobs if job["state"] == "failed"]
         return {
             "schema_version": "bookflow-snapshot-v1.2", "contract_version": CONTRACT_VERSION,
@@ -1014,7 +1066,8 @@ class BatchBackend:
             "active_project": active_project, "projects": projects, "sources": sources,
             "active_batch": active_batch, "batches": batches, "jobs": jobs,
             "queue": counts, "pipeline_phase": active_batch["state"] if active_batch else "idle",
-            "current_stage": current.get("stage") if current else None, "aggregate_progress": (completed / total if total else 0),
+            "current_stage": current.get("stage") if current else None, "aggregate_progress": aggregate_progress,
+            "current_progress": current_progress, "review_queue_count": review_queue_count,
             "current_item": current.get("job_id") if current else None, "total_items": total,
             "can_pause": bool(current and current["state"] == "running"),
             "can_resume": bool(current and current["state"] in {"paused", "queued"} and active_batch and active_batch["state"] == "paused"),

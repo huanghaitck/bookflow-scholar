@@ -120,14 +120,23 @@ class ProductionPipeline:
             intake = json.loads(intake_summary_path.read_text("utf-8"))
             quality_records = [json.loads(line) for line in (workspace / "data/page_text_quality.jsonl").read_text("utf-8").splitlines() if line]
             route_records = [json.loads(line) for line in (workspace / "data/ocr_routes.jsonl").read_text("utf-8").splitlines() if line]
-            selected_text = {index + 1: str(item.get("text") or "") for index, item in enumerate(route_records)}
+            selected_text = {}
+            for index, item in enumerate(route_records, 1):
+                if item.get("status") != "accepted":
+                    selected_text[index] = ""
+                elif item.get("route") != "python_text":
+                    selected_text[index] = str(item.get("text") or "")
         else:
             intake = analyze_pdf_pages(source, workspace / "data", registry=registry,
                                        vision_provider_id=vision_provider_id,
                                        allow_provider_calls=allow_real and vision_provider_id != "mock",
                                        attempt_ledger_path=attempt_ledger_path,
                                        attempt_context={"project_id": project_id, "job_id": str(job["job_id"]),
-                                                        "stage": "ocr", "provider_role": "vision"})
+                                                        "stage": "ocr", "provider_role": "vision"},
+                                       progress=lambda completed, total: progress(
+                                           "text_quality", 0.18 + 0.09 * (completed / max(total, 1)),
+                                           {"completed_pages": completed, "total_pages": total},
+                                       ))
             quality_records = intake["quality_records"]
             route_records = intake["route_records"]
             selected_text = intake["selected_text"]
@@ -144,6 +153,7 @@ class ProductionPipeline:
 
         self._control(stop)
         progress("structure", 0.4, {})
+        structure_review_pages: list[int] = []
         structure_path = workspace / "data/book_structure.json"
         existing_structure = json.loads(structure_path.read_text("utf-8")) if structure_path.is_file() else None
         classification_path = workspace / "data/page_classification.jsonl"
@@ -171,19 +181,53 @@ class ProductionPipeline:
                        if item.get("review_required") or item.get("images") or item.get("tables")}
                 )
                 if selected_pages:
-                    structure = run_structure_workspace(workspace, registry, provider_id=vision_provider_id,
-                                                        selected_pages=selected_pages,
-                                                        attempt_ledger_path=attempt_ledger_path,
-                                                        attempt_context={"project_id": project_id,
-                                                                         "job_id": str(job["job_id"]),
-                                                                         "stage": "structure",
-                                                                         "provider_role": "vision"})
-                    structure_calls = int(structure.get("provider_calls_this_run", 0))
-                    structure["selected_pages"] = selected_pages
+                    try:
+                        structure = run_structure_workspace(
+                            workspace, registry, provider_id=vision_provider_id,
+                            selected_pages=selected_pages,
+                            attempt_ledger_path=attempt_ledger_path,
+                            attempt_context={"project_id": project_id,
+                                             "job_id": str(job["job_id"]),
+                                             "stage": "structure",
+                                             "provider_role": "vision"},
+                        )
+                        structure_calls = int(structure.get("provider_calls_this_run", 0))
+                        structure["selected_pages"] = selected_pages
+                    except (OSError, RuntimeError, ValueError):
+                        # The deterministic structure is already complete.
+                        # Optional VLM enrichment may degrade to review, but it
+                        # must not block translation of healthy text pages.
+                        structure_calls = 0
+                        structure_review_pages = selected_pages
                 else:
                     structure_calls = 0
             else:
                 structure_calls = 0
+
+        if structure_review_pages:
+            existing_review_pages = {int(page) for page in intake.get("review_pages", [])}
+            intake["review_pages"] = sorted(existing_review_pages | set(structure_review_pages))
+            details = list(intake.get("review_page_details") or [])
+            known = {int(item.get("page", 0)) for item in details if isinstance(item, dict)}
+            for item in details:
+                if not isinstance(item, dict) or int(item.get("page", 0)) not in structure_review_pages:
+                    continue
+                item["issue_codes"] = sorted(
+                    {str(code) for code in item.get("issue_codes", [])} |
+                    {"structure_provider_unavailable"}
+                )
+                item["structure_route"] = "deterministic_structure_fallback"
+            details.extend(
+                {"page": page, "route": "deterministic_structure_fallback",
+                 "status": "review_required", "issue_codes": ["structure_provider_unavailable"]}
+                for page in structure_review_pages if page not in known
+            )
+            intake["review_page_details"] = details
+            atomic_write_json(
+                intake_summary_path,
+                {key: value for key, value in intake.items()
+                 if key not in {"selected_text", "quality_records", "route_records"}},
+            )
 
         self._control(stop)
         progress("plan", 0.5, {})
@@ -213,7 +257,11 @@ class ProductionPipeline:
                 provider_name, model_alias = profile.provider_id, profile.model
             translation = translate_workspace(workspace, provider, provider_name=provider_name,
                                               model=model_alias or "unknown", batch_size=8,
-                                              control=lambda: self._control(stop))
+                                              control=lambda: self._control(stop),
+                                              progress=lambda completed, total: progress(
+                                                  "translation", 0.62 + 0.19 * (completed / max(total, 1)),
+                                                  {"completed_units": completed, "total_units": total},
+                                              ))
         elif translation_enabled:
             provider_name = text_provider_id
 
@@ -255,8 +303,16 @@ class ProductionPipeline:
                 if path and path.is_file():
                     shutil.copy2(path, output / path.name)
 
-        warnings = [{"type": "page_review_required", "page": page, "review_required": True}
-                    for page in intake.get("review_pages", [])]
+        detail_by_page = {
+            int(item["page"]): item for item in intake.get("review_page_details", [])
+            if isinstance(item, dict) and item.get("page") is not None
+        }
+        warnings = [
+            {"type": "page_review_required", "page": page, "review_required": True,
+             "route": detail_by_page.get(int(page), {}).get("route"),
+             "issue_codes": detail_by_page.get(int(page), {}).get("issue_codes", [])}
+            for page in intake.get("review_pages", [])
+        ]
         metadata = {
             "source_id": job["source_id"], "workspace_id": json.loads((workspace / "bookflow_workspace.json").read_text("utf-8"))["workspace_id"],
             "filename": job["filename"], "sha256": job["sha256"], "source_language": source_actual,

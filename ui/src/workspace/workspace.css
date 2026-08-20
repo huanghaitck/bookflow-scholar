@@ -116,6 +116,8 @@
 .stage-list i { height: 6px; overflow: hidden; background: var(--control); border-radius: 5px; }
 .stage-list b { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 50%, #e2b071)); border-radius: inherit; }
 .stage-list em { color: var(--text-muted); font-style: normal; }
+.progress-context { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; color: var(--text-muted); font-size: 9px; }
+.progress-context span:first-child { color: var(--text); font-weight: 600; }
 .workflow-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 9px; }
 .workflow-controls button { min-height: 28px; display: flex; align-items: center; gap: 4px; padding: 0 8px; color: var(--accent-contrast); background: var(--accent); border: 0; border-radius: 6px; font-size: 8px; }
 .workflow-controls button:disabled { opacity: .45; }

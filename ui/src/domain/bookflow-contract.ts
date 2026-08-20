@@ -91,6 +91,11 @@ export interface BookflowSnapshot {
   currentStage: string;
   completedUnits: number;
   totalUnits: number;
+  progressRatio: number;
+  progressDetail: {
+    completed: number;
+    total: number;
+  } | null;
   reviewQueueCount: number;
   providerStatus: ProviderStatus;
   rendererStatus: RendererStatus;

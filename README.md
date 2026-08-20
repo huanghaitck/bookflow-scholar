@@ -3,7 +3,7 @@
 **用你自己的 API，把论文、书籍与专著翻译成仍然“像一本书”的成品。**
 **Bring your own API and translate scholarly PDFs, books, and monographs into editions that still read like books.**
 
-[下载 0.8.0-rc.3 / Download](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.3) · [六语言手册 / Manuals](#使用手册--manuals) · [Apache-2.0 许可证 / License](LICENSE) · [反馈问题 / Report an issue](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 路线图 / Roadmap](docs/ROADMAP_1.0.md)
+[下载 0.8.0-rc.4 / Download](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.4) · [六语言手册 / Manuals](#使用手册--manuals) · [Apache-2.0 许可证 / License](LICENSE) · [反馈问题 / Report an issue](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [1.0 路线图 / Roadmap](docs/ROADMAP_1.0.md)
 
 <p align="center">
   <img src="docs/assets/showcase/bilingual-edition-cover.png" width="30%" alt="Bookflow Scholar bilingual edition cover">
@@ -65,7 +65,7 @@ The `【245】` marker sits at the original physical boundary, while the surroun
 
 ## 快速开始｜Quick start
 
-1. 安装 `Bookflow-Scholar-0.8.0-rc.3-setup.exe`，或解压便携 ZIP。
+1. 安装 `Bookflow-Scholar-0.8.0-rc.4-setup.exe`，或解压便携 ZIP。
    Install the setup package, or extract the portable ZIP.
 2. 打开客户端，先选择“创建项目”。
    Open the app and choose **Create project**.
@@ -123,11 +123,11 @@ We welcome maintainers interested in PDF structure recovery, multilingual transl
 
 ## 当前版本与 1.0｜Release status and 1.0
 
-`0.8.0-rc.3` 修复了无 WebView2 电脑上的安装版与便携版启动路径，并明确区分内置原生 PDF 渲染和可选 LibreOffice 能力。下一阶段将重点放在稳定性、可解释的版面审阅、Provider 兼容性、可维护的开源发布流程与更完整的用户文档，详见 [1.0 路线图](docs/ROADMAP_1.0.md)。
+`0.8.0-rc.4` 在 rc.3 的 Windows 依赖修复之上，增加坏 OCR 页隔离与待复核回流、可选视觉结构降级、真实阶段错误提示，以及逐页/逐批翻译进度。低质量页不会再作为乱码翻译单元阻塞整本。详见 [1.0 路线图](docs/ROADMAP_1.0.md)。
 
 This release candidate has completed real desktop install, processing, pause/resume, upgrade, uninstall, and data-recovery acceptance. The path to 1.0 focuses on stability, explainable layout review, provider compatibility, maintainable open-source releases, and deeper documentation. See the [1.0 roadmap](docs/ROADMAP_1.0.md).
 
-`0.8.0-rc.3` 暂未签名。Windows 可能显示 SmartScreen 警告；运行前请核验发布页中的 SHA-256。便携 ZIP 可供不希望运行安装器的用户使用。
-`0.8.0-rc.3` is unsigned. Windows may show a SmartScreen warning; verify the published SHA-256 before running it. A portable ZIP is available for users who prefer not to run an installer.
+`0.8.0-rc.4` 暂未签名。Windows 可能显示 SmartScreen 警告；运行前请核验发布页中的 SHA-256。便携 ZIP 可供不希望运行安装器的用户使用。
+`0.8.0-rc.4` is unsigned. Windows may show a SmartScreen warning; verify the published SHA-256 before running it. A portable ZIP is available for users who prefer not to run an installer.
 
 Copyright © 2026 huanghaitck. Licensed under the [Apache License 2.0](LICENSE).

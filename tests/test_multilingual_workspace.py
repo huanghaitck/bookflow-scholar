@@ -97,6 +97,21 @@ def test_non_mock_transport_call_accounting_migrates_old_batch_logs(tmp_path: Pa
     assert status_workspace(workspace)["provider_calls"] == 1
 
 
+def test_translation_reports_batch_progress(tmp_path: Path) -> None:
+    pdf = tmp_path / "progress.pdf"; _pdf(pdf, SAMPLES["en"] * 20, "en")
+    workspace = tmp_path / "workspace-progress"
+    create_workspace(workspace, pdf, "en", "de"); inspect_workspace(workspace)
+    updates: list[tuple[int, int]] = []
+    result = translate_workspace(
+        workspace, MockTranslationProvider(), batch_size=1,
+        progress=lambda completed, total: updates.append((completed, total)),
+    )
+    assert result["status"] == "completed"
+    assert updates[0][0] == 0 and updates[0][1] > 0
+    assert updates[-1] == (updates[0][1], updates[0][1])
+    assert all(left[0] <= right[0] for left, right in zip(updates, updates[1:]))
+
+
 def test_manual_review_export_has_language_neutral_template_and_ocr(tmp_path: Path) -> None:
     objects = tmp_path / "objects.json"
     objects.write_text(json.dumps({"objects": [{"object_id": "x", "source_page": 1,

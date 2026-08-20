@@ -14,7 +14,7 @@ import shutil
 import unicodedata
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import fitz
 
@@ -210,7 +210,8 @@ def analyze_pdf_pages(pdf_path: Path, output_dir: Path, *, registry: ProviderReg
                       vision_provider_id: str | None = None,
                       allow_provider_calls: bool = False,
                       attempt_ledger_path: Path | None = None,
-                      attempt_context: dict[str, Any] | None = None) -> dict[str, Any]:
+                      attempt_context: dict[str, Any] | None = None,
+                      progress: Callable[[int, int], None] | None = None) -> dict[str, Any]:
     gate = PageTextQualityGate()
     router = OCRRouter(registry=registry, vision_provider_id=vision_provider_id,
                        allow_provider_calls=allow_provider_calls, attempt_ledger_path=attempt_ledger_path,
@@ -241,7 +242,16 @@ def analyze_pdf_pages(pdf_path: Path, output_dir: Path, *, registry: ProviderReg
                                   quality=quality, output_dir=output_dir / "ocr_pages")
             quality_records.append(quality.to_dict())
             route_records.append(routed.to_dict())
-            selected_text[index] = routed.text
+            # A rejected extraction is evidence for review, not translation
+            # input. Retain it in ocr_routes.jsonl for correction while
+            # excluding it from provider dispatch so one damaged page cannot
+            # fail the rest of a book through source-echo quality checks.
+            if routed.status != "accepted":
+                selected_text[index] = ""
+            elif routed.route != "python_text":
+                selected_text[index] = routed.text
+            if progress:
+                progress(index, document.page_count)
     finally:
         document.close()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -256,6 +266,13 @@ def analyze_pdf_pages(pdf_path: Path, output_dir: Path, *, registry: ProviderReg
                    for name in sorted({item["route"] for item in route_records})},
         "review_pages": [index + 1 for index, item in enumerate(route_records)
                          if item["status"] != "accepted"],
+        "review_page_details": [
+            {"page": index + 1, "route": item["route"], "status": item["status"],
+             "issue_codes": list(item.get("issue_codes") or [])}
+            for index, item in enumerate(route_records) if item["status"] != "accepted"
+        ],
+        "translation_excluded_pages": [index + 1 for index, item in enumerate(route_records)
+                                       if item["status"] != "accepted"],
         "local_ocr_capabilities": router.local_capabilities(),
     }
     atomic_write_json(output_dir / "page_intake_summary.json", summary)

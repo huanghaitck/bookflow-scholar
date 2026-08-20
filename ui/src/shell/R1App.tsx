@@ -117,7 +117,7 @@ export function R1App({
           setPreferences={setPreferences}
         />
         <footer className="desktop-statusbar">
-          <span>v0.8.0-rc.3</span>
+          <span>v0.8.0-rc.4</span>
           <i />
           <span>{snapshot.connectionState === 'connected' ? '后端已连接' : '后端未连接'}</span>
           <span>{translate(preferences.uiLocale, 'autoSaveEnabled')}</span>
