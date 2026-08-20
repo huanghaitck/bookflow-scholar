@@ -559,11 +559,12 @@ def rebuild_structured_translation_units(
     try:
         for page_index, page in enumerate(document):
             page_no = page_index + 1
-            blocks = _merge_wrapped_text_blocks(_geometric_text_blocks(page))
-            if not blocks and (page_text_overrides or {}).get(page_no, "").strip():
-                blocks = _ocr_fallback_blocks(
-                    str((page_text_overrides or {})[page_no]).strip(), classifications.get(page_no, {}),
-                )
+            if page_text_overrides is not None and page_no in page_text_overrides:
+                routed_text = str(page_text_overrides[page_no]).strip()
+                blocks = (_ocr_fallback_blocks(routed_text, classifications.get(page_no, {}))
+                          if routed_text else [])
+            else:
+                blocks = _merge_wrapped_text_blocks(_geometric_text_blocks(page))
             page_blocks[page_no] = blocks
             for block in blocks:
                 edge = "header" if block["bbox"][1] <= 0.13 else "footer" if block["bbox"][3] >= 0.87 else ""
@@ -836,7 +837,8 @@ def _provider_call_count(workspace: Path) -> int:
 
 def translate_workspace(workspace: Path, provider: Any, *, provider_name: str = "mock", model: str = "mock-v1",
                         batch_size: int = 8, max_units: int | None = None,
-                        control: Callable[[], None] | None = None) -> dict[str, Any]:
+                        control: Callable[[], None] | None = None,
+                        progress: Callable[[int, int], None] | None = None) -> dict[str, Any]:
     workspace = workspace.resolve(); manifest = _load(workspace); units = _jsonl(workspace / "data/translation_units.jsonl")
     overlay_path = workspace / "manual_review/imported_objects.json"
     if overlay_path.is_file():
@@ -884,6 +886,8 @@ def translate_workspace(workspace: Path, provider: Any, *, provider_name: str = 
                       if str(unit["translation_unit_id"]) not in grouped_pending)
     manifest["provider_calls"] = _provider_call_count(workspace)
     calls = 0; completed = 0
+    if progress:
+        progress(0, len(pending))
     for start in range(0, len(work_items), batch_size):
         if control:
             control()
@@ -942,6 +946,8 @@ def translate_workspace(workspace: Path, provider: Any, *, provider_name: str = 
         atomic_write_json(workspace / "checkpoints" / f"translation-{manifest['language_pair']}.json",
                           {"status": "in_progress", "completed": len(units) - len(pending) + completed,
                            "total": len(units), "provider_calls": manifest["provider_calls"], "updated_at": _now()})
+        if progress:
+            progress(completed, len(pending))
     final = plan_workspace(workspace)
     status = "completed" if final["pending"] == 0 else "in_progress"
     atomic_write_json(workspace / "checkpoints" / f"translation-{manifest['language_pair']}.json",

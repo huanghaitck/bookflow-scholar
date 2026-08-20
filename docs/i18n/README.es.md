@@ -1,6 +1,6 @@
 # Manual de Bookflow Scholar (español)
 
-[Descargar](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.3) · [Informar de un problema](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [Plan hacia 1.0](../ROADMAP_1.0.md) · [Inicio](../../README.md)
+[Descargar](https://github.com/huanghaitck/bookflow-scholar/releases/tag/v0.8.0-rc.4) · [Informar de un problema](https://github.com/huanghaitck/bookflow-scholar/issues/new?template=user_problem.yml) · [Plan hacia 1.0](../ROADMAP_1.0.md) · [Inicio](../../README.md)
 
 ## Qué hace
 
@@ -19,7 +19,7 @@ Mejoras principales:
 
 ## Primer uso
 
-1. Instale `Bookflow-Scholar-0.8.0-rc.3-setup.exe`, o extraiga el ZIP portable y ejecute `Bookflow Scholar.exe`.
+1. Instale `Bookflow-Scholar-0.8.0-rc.4-setup.exe`, o extraiga el ZIP portable y ejecute `Bookflow Scholar.exe`.
 2. Seleccione **Create project**. El proyecto debe existir antes de importar el PDF para definir su espacio de trabajo y contexto.
 3. Abra el proyecto, configure proveedores de texto y visión, modelos y claves API, y guarde. Las claves se almacenan en el Administrador de credenciales de Windows.
 4. Seleccione **Import PDF** y elija los idiomas de origen y destino. En proyectos con varios Source, seleccione explícitamente el activo.

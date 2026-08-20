@@ -156,6 +156,40 @@ def test_provider_rate_limit_ocr_write_and_checkpoint_failures_are_isolated(tmp_
     assert result["counts"] == {"completed": 1, "failed": 4}
 
 
+def test_snapshot_aggregate_progress_includes_running_job_progress(tmp_path: Path) -> None:
+    backend, project = _backend(tmp_path)
+    source = _pdf(tmp_path / "progress.pdf", "progress")
+    batch_id = backend.import_sources(project["project_id"], [source], command_id="progress")['batch_id']
+    with backend._connect() as connection:
+        connection.execute(
+            "UPDATE jobs SET state='running',stage='translation',progress=0.67 WHERE batch_id=?",
+            (batch_id,),
+        )
+    snapshot = backend.snapshot(batch_id=batch_id)
+    assert snapshot["aggregate_progress"] == pytest.approx(0.67)
+    assert snapshot["current_progress"]["progress"] == pytest.approx(0.67)
+
+
+def test_failure_envelope_reports_the_actual_pipeline_stage(tmp_path: Path) -> None:
+    backend, project = _backend(tmp_path)
+    source = _pdf(tmp_path / "translation failure.pdf", "translation failure")
+    batch_id = backend.import_sources(project["project_id"], [source], command_id="stage-error")["batch_id"]
+
+    def fail_during_translation(job: dict) -> dict:
+        with backend._connect() as connection:
+            connection.execute(
+                "UPDATE jobs SET stage='translation',progress=0.62 WHERE job_id=?",
+                (job["job_id"],),
+            )
+        raise RuntimeError("configured credential is missing")
+
+    backend.run_batch(batch_id, processor=fail_during_translation)
+    job = backend.snapshot(batch_id=batch_id)["jobs"][0]
+    assert job["state"] == "failed"
+    assert job["error"]["error_code"] == "translation_failed"
+    assert job["error"]["stage"] == "translation"
+
+
 def test_six_language_offline_batch_outputs_contract_layout_and_utf8(tmp_path: Path) -> None:
     backend, project = _backend(tmp_path)
     manifest_rows = list(csv.DictReader((FIXTURES / "SOURCE_MANIFEST.csv").open(encoding="utf-8")))

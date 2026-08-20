@@ -13,6 +13,8 @@ export function createDisconnectedSnapshot(): BookflowSnapshot {
     currentStage: 'empty',
     completedUnits: 0,
     totalUnits: 0,
+    progressRatio: 0,
+    progressDetail: null,
     reviewQueueCount: 0,
     providerStatus: {
       text: {

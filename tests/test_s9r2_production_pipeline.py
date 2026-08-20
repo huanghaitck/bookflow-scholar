@@ -21,10 +21,12 @@ from bookflow.multilingual_workspace import (
     _ocr_fallback_blocks,
     _original_page_marker_label,
     _unit_render_parts,
+    create_workspace,
     edition_output_stem,
+    rebuild_structured_translation_units,
     translate_workspace,
 )
-from bookflow.page_quality import OCRRouter, PageTextQualityGate, PageTextQualityResult
+from bookflow.page_quality import analyze_pdf_pages, OCRRouter, PageTextQualityGate, PageTextQualityResult
 from bookflow.provider_registry import (
     ConfiguredModelClient,
     ProviderSchemaError,
@@ -61,6 +63,36 @@ def test_page_quality_gate_is_explainable() -> None:
     assert good.passed and good.recommended_route == "python_text"
     assert not bad.passed and bad.recommended_route == "ocr_router"
     assert bad.issue_codes and 0 <= bad.quality_score <= 1
+
+
+def test_rejected_text_page_is_retained_for_review_but_excluded_from_translation(tmp_path: Path) -> None:
+    source = tmp_path / "font-mapped-scan.pdf"
+    document = fitz.open(); page = document.new_page()
+    page.insert_text((50, 70), "A" * 12)
+    document.save(source); document.close()
+    updates: list[tuple[int, int]] = []
+    result = analyze_pdf_pages(source, tmp_path / "quality", progress=lambda done, total: updates.append((done, total)))
+    assert result["review_pages"] == [1]
+    assert result["translation_excluded_pages"] == [1]
+    assert result["route_records"][0]["text"]
+    assert result["selected_text"][1] == ""
+    assert updates == [(1, 1)]
+
+
+def test_empty_routed_override_prevents_bad_geometric_text_from_becoming_translation_unit(tmp_path: Path) -> None:
+    source = tmp_path / "bad-layer.pdf"
+    document = fitz.open(); page = document.new_page()
+    page.insert_text((50, 70), "A" * 240)
+    document.save(source); document.close()
+    workspace = tmp_path / "workspace"
+    create_workspace(workspace, source, "en", "de")
+    (workspace / "data/page_classification.jsonl").write_text(json.dumps({
+        "physical_page": 1, "page_class": "body", "semantic_regions": [],
+        "visual_regions": [], "normalizer_version": "test",
+    }) + "\n", "utf-8")
+    report = rebuild_structured_translation_units(workspace, page_text_overrides={1: ""})
+    assert report["units"] == 0
+    assert (workspace / "data/translation_units.jsonl").read_text("utf-8") == ""
 
 
 def test_raster_page_ocr_is_split_into_translatable_structural_units() -> None:
@@ -529,6 +561,79 @@ def test_formal_batch_uses_generic_workspace_and_publication_outputs(tmp_path: P
     assert (Path(metadata["workspace"]) / "data/page_text_quality.jsonl").is_file()
     assert (Path(metadata["workspace"]) / "data/book_structure.json").is_file()
     assert job["usage"]["whole_book_calls"] == 0
+
+
+def test_two_page_bad_ocr_page_is_reviewed_without_blocking_healthy_page(tmp_path: Path) -> None:
+    source = tmp_path / "1863 scan sample.pdf"
+    document = fitz.open()
+    healthy = document.new_page(); healthy.insert_text(
+        (50, 70), "A complete historical paragraph with readable words and punctuation. " * 4,
+    )
+    damaged = document.new_page(); damaged.insert_text((50, 70), "A" * 12)
+    document.save(source); document.close()
+    backend = BatchBackend(tmp_path / "backend")
+    project = backend.create_project("Damaged scan recovery")
+    imported = backend.import_sources(
+        project["project_id"], [source], command_id="damaged-scan",
+        pipeline_config={"source_language": "en", "target_language": "de",
+                         "text_provider_id": "mock", "vision_provider_id": "mock",
+                         "output_formats": ["md", "pdf"]},
+    )
+    result = backend.run_batch(imported["batch_id"])
+    assert result["counts"] == {"completed": 1}
+    snapshot = backend.snapshot(batch_id=imported["batch_id"])
+    assert snapshot["review_queue_count"] == 1
+    job = snapshot["jobs"][0]
+    intake = job["pipeline_details"]["artifacts"]["page_intake"]
+    assert intake["review_pages"] == [2]
+    assert intake["translation_excluded_pages"] == [2]
+    workspace = Path(job["pipeline_details"]["workspace"])
+    units = [json.loads(line) for line in
+             (workspace / "data/translation_units.jsonl").read_text("utf-8").splitlines() if line]
+    assert units and {int(unit["source_page"]) for unit in units} == {1}
+    assert (Path(job["output_path"]) / "HUMAN_REVIEW_QUEUE.json").is_file()
+
+
+def test_optional_structure_provider_failure_falls_back_and_marks_review(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = tmp_path / "structure fallback.pdf"
+    document = fitz.open()
+    page = document.new_page(); page.insert_text(
+        (50, 70), "Readable body text that can continue through deterministic structure. " * 4,
+    )
+    page = document.new_page(); page.insert_text((50, 70), "A" * 12)
+    document.save(source); document.close()
+
+    class Registry:
+        allow_real_api = True
+
+        def get(self, provider_id, capability):
+            return type("Profile", (), {"provider_type": "mock", "provider_id": provider_id})()
+
+    monkeypatch.setattr("bookflow.production_pipeline.ProductionPipeline._registry", lambda self: Registry())
+    monkeypatch.setattr(
+        "bookflow.production_pipeline.run_structure_workspace",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("vision unavailable")),
+    )
+    backend = BatchBackend(tmp_path / "backend")
+    project = backend.create_project("Structure fallback")
+    imported = backend.import_sources(
+        project["project_id"], [source], command_id="structure-fallback",
+        pipeline_config={"source_language": "en", "target_language": "de",
+                         "text_provider_id": "mock", "vision_provider_id": "vision",
+                         "output_formats": ["md"]},
+    )
+    result = backend.run_batch(imported["batch_id"])
+    assert result["counts"] == {"completed": 1}
+    snapshot = backend.snapshot(batch_id=imported["batch_id"])
+    assert snapshot["review_queue_count"] == 2
+    details = snapshot["jobs"][0]["pipeline_details"]["artifacts"]["page_intake"]
+    page_detail = next(item for item in details["review_page_details"] if item["page"] == 2)
+    assert "structure_provider_unavailable" in page_detail["issue_codes"]
+    assert page_detail["structure_route"] == "deterministic_structure_fallback"
+    warnings = json.loads((Path(snapshot["jobs"][0]["output_path"]) / "warnings.json").read_text("utf-8"))
+    assert warnings[0]["review_required"] is True
 
 
 def test_edition_output_names_use_source_and_translated_titles(tmp_path: Path) -> None:
